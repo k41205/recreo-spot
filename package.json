@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "description": "An app to look for recreational entertainment POIs, based on OpenStreetMap",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js",
+    "test": "mocha --ui tdd test/**/*.js --exit"
   },
   "author": "Giacomo Cavarretta",
   "license": "ISC",
