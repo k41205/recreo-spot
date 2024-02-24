@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/k41205/recreo-spot/compare/v0.1.0...v0.2.0) (2024-02-24)
+
+
+### Features
+
+* **models/firestore/connect:** implement Firestore init and configured server.js and db.js to run with Firestore ([172b1a6](https://github.com/k41205/recreo-spot/commit/172b1a6d5583c890974e9ca4e82a349bc0df0c1f))
+* **models/firestore:** implement getUser by username and email method and add tests for both ([fcf9e21](https://github.com/k41205/recreo-spot/commit/fcf9e21ac2e6b1d3a854312179950a59560db419))
+* **models/firestore:** implement user model ([e0461c6](https://github.com/k41205/recreo-spot/commit/e0461c680907505304160823c58ade2bfecc24ec))
+
 # 1.0.0 (2024-02-16)
 
 
