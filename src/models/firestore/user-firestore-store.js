@@ -21,6 +21,26 @@ export function userFirestoreStore(firestore) {
       return userSnap.exists ? { id: userSnap.id, ...userSnap.data() } : null;
     },
 
+    async getUserByUsername(username) {
+      const userQuerySnapshot = await firestore.collection(collectionName).where("username", "==", username).get();
+      if (userQuerySnapshot.empty) {
+        return null;
+      }
+      // Assuming email is unique, take the first result
+      const userDoc = userQuerySnapshot.docs[0];
+      return { id: userDoc.id, ...userDoc.data() };
+    },
+
+    async getUserByEmail(email) {
+      const userQuerySnapshot = await firestore.collection(collectionName).where("email", "==", email).get();
+      if (userQuerySnapshot.empty) {
+        return null;
+      }
+      // Assuming email is unique, take the first result
+      const userDoc = userQuerySnapshot.docs[0];
+      return { id: userDoc.id, ...userDoc.data() };
+    },
+
     async getAllUsers() {
       const snapshot = await firestore.collection(collectionName).get();
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));

@@ -57,4 +57,29 @@ describe("UserModel Firestore operations", () => {
     // eslint-disable-next-line no-unused-expressions
     expect(user).to.be.null;
   });
+
+  it("should find a user by username", async () => {
+    const expectedUser = testUsers[0]; // Assuming testUsers has at least one user
+    const foundUser = await db.userStore.getUserByUsername(expectedUser.username);
+    expect(foundUser).to.deep.include({ username: expectedUser.username });
+  });
+
+  it("should not find a user with non-existent username", async () => {
+    const user = await db.userStore.getUserByUsername("nonexistentUsername");
+    // eslint-disable-next-line no-unused-expressions
+    expect(user).to.be.null;
+  });
+
+  it("should find a user by email", async () => {
+    const expectedUser = testUsers[0]; // Assuming testUsers has at least one user with a unique email
+    await db.userStore.addUser(expectedUser); // Ensure the user is added for the test
+    const foundUser = await db.userStore.getUserByEmail(expectedUser.email);
+    expect(foundUser).to.deep.include({ email: expectedUser.email });
+  });
+
+  it("should not find a user with non-existent email", async () => {
+    const user = await db.userStore.getUserByEmail("nonexistentemail@example.com");
+    // eslint-disable-next-line no-unused-expressions
+    expect(user).to.be.null;
+  });
 });
