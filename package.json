@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "lint": "eslint . --ext .js",
-    "test": "mocha --ui tdd test/**/*.js --exit"
+    "test": "mocha --require dotenv/config --ui bdd test/**/*.js --exit"
   },
   "author": "Giacomo Cavarretta",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@hapi/hapi": "^21.3.3",
     "@hapi/vision": "^7.0.3",
     "dotenv": "^16.4.4",
+    "firebase-admin": "^12.0.0",
     "handlebars": "^4.7.8",
     "joi": "^17.12.1",
     "lowdb": "^7.0.1",
