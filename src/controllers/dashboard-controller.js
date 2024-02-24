@@ -3,7 +3,8 @@ import { db } from "../models/db.js";
 export const dashboardController = {
   index: {
     async handler(request, h) {
-      const poiList = await db.poiStore.getAllPois();
+      // const poiList = await db.poiStore.getAllPois();
+      const poiList = [];
       const viewData = {
         title: "RecreoSpot Dashboard",
         poiList: poiList,
