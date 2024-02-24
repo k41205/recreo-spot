@@ -3,8 +3,11 @@ import Hapi from "@hapi/hapi";
 import path from "path";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
+import dotenv from "dotenv";
 import { webRoutes } from "./web-routes.js";
 import { db } from "./models/db.js";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
