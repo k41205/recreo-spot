@@ -1,6 +1,7 @@
 import Vision from "@hapi/vision";
 import Hapi from "@hapi/hapi";
 import path from "path";
+import Joi from "joi";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
 import dotenv from "dotenv";
@@ -18,6 +19,8 @@ async function init() {
   });
 
   await server.register(Vision);
+
+  server.validator(Joi);
 
   server.views({
     engines: {
