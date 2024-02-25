@@ -1,9 +1,12 @@
 import Vision from "@hapi/vision";
 import Hapi from "@hapi/hapi";
 import path from "path";
+import Joi from "joi";
+import Cookie from "@hapi/cookie";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
 import dotenv from "dotenv";
+import { accountsController } from "./controllers/accounts-controller.js";
 import { webRoutes } from "./web-routes.js";
 import { db } from "./models/db.js";
 
@@ -18,6 +21,9 @@ async function init() {
   });
 
   await server.register(Vision);
+  await server.register(Cookie);
+
+  server.validator(Joi);
 
   server.views({
     engines: {
@@ -30,6 +36,19 @@ async function init() {
     layout: true,
     isCached: false,
   });
+
+  server.auth.strategy("session", "cookie", {
+    cookie: {
+      name: "session",
+      password: process.env.COOKIE_PASSWORD,
+      // Should be true in production
+      isSecure: false,
+    },
+    redirectTo: "/",
+    validate: accountsController.validate,
+  });
+
+  server.auth.default("session");
 
   db.init("firestore");
   server.route(webRoutes);
