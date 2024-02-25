@@ -3,11 +3,13 @@ import { UserSpec, UserCredentialsSpec } from "../models/joi-schemas.js";
 
 export const accountsController = {
   index: {
+    auth: false,
     async handler(request, h) {
       return h.view("main", { title: "Welcome to RecreoSpot" });
     },
   },
   showSignup: {
+    auth: false,
     async handler(request, h) {
       return h.view("signup-view", { title: "Sign up for RecreoSpot" });
     },
@@ -26,6 +28,7 @@ export const accountsController = {
     },
   },
   showLogin: {
+    auth: false,
     async handler(request, h) {
       return h.view("login-view", { title: "Login to RecreoSpot" });
     },
@@ -43,12 +46,22 @@ export const accountsController = {
       if (!user || user.password !== password) {
         return h.redirect("/");
       }
+      request.cookieAuth.set({ id: user.id });
       return h.redirect("/dashboard");
     },
   },
   logout: {
     async handler(request, h) {
+      request.cookieAuth.clear();
       return h.redirect("/");
     },
+  },
+
+  async validate(request, session) {
+    const user = await db.userStore.getUserById(session.id);
+    if (!user) {
+      return { isValid: false };
+    }
+    return { isValid: true, credentials: user };
   },
 };
