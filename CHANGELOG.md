@@ -1,3 +1,11 @@
+# [0.3.0](https://github.com/k41205/recreo-spot/compare/v0.2.0...v0.3.0) (2024-02-25)
+
+
+### Features
+
+* **accounts-controller:** implement input check with joi and render errors on view ([a542737](https://github.com/k41205/recreo-spot/commit/a5427377a5070f8f3c465265e210aeb4541b578a))
+* **auth:** implement cookie-based session handling ([d6be861](https://github.com/k41205/recreo-spot/commit/d6be86180b10ceb3c558bc6bdbb72f64ad905af1))
+
 # [0.2.0](https://github.com/k41205/recreo-spot/compare/v0.1.0...v0.2.0) (2024-02-24)
 
 
