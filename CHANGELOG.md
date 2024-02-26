@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/k41205/recreo-spot/compare/v0.3.0...v0.4.0) (2024-02-26)
+
+
+### Features
+
+* **poi-firestore-store:** implement POI Firestore model, tests, and update db.js ([1328dc4](https://github.com/k41205/recreo-spot/commit/1328dc44a6f1e62ae6744ad9314f52a8828d1b55))
+
 # [0.3.0](https://github.com/k41205/recreo-spot/compare/v0.2.0...v0.3.0) (2024-02-25)
 
 
