@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { db } from "../src/models/db.js";
-import { testPois } from "./fixtures.js";
+import { db } from "../../src/models/db.js";
+import { testPois } from "../fixtures.js";
 
 describe("POI Model Firestore Tests", () => {
   // eslint-disable-next-line func-names

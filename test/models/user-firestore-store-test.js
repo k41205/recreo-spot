@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { db } from "../src/models/db.js";
-import { testUsers } from "./fixtures.js";
+import { db } from "../../src/models/db.js";
+import { testUsers } from "../fixtures.js";
 
 describe("User Model Firestore Tests", () => {
   beforeEach(async () => {
