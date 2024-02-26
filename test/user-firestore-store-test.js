@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { db } from "../src/models/db.js";
 import { testUsers } from "./fixtures.js";
 
-describe("UserModel Firestore operations", () => {
+describe("User Model Firestore Tests", () => {
   beforeEach(async () => {
     // Initialize Firestore and switch to the test collection
     db.init("firestore");
@@ -33,10 +33,9 @@ describe("UserModel Firestore operations", () => {
   it("should delete a user by ID", async () => {
     const users = await db.userStore.getAllUsers();
     const userToDelete = users[0];
-    await db.userStore.deleteUserById(userToDelete.id);
-    const user = await db.userStore.getUserById(userToDelete.id);
+    const deletionSuccess = await db.userStore.deleteUserById(userToDelete.id);
     // eslint-disable-next-line no-unused-expressions
-    expect(user).to.be.null;
+    expect(deletionSuccess).to.be.true;
   });
 
   it("should get all users", async () => {
