@@ -1,7 +1,11 @@
+export const serviceUrl = "http://desktop-9folu4e:3000";
+
+export const maggie = { firstName: "Maggie", lastName: "Simpson", password: "passwordS", type: "user", username: "magSim", email: "maggie@simpson.com" };
+
 export const testUsers = [
-  { name: "Name One", surname: "Surname One", password: "password1", type: "admin", username: "userone", email: "userone@example.com" },
-  { name: "Name Two", surname: "Surname Two", password: "password2", type: "moderator", username: "usertwo", email: "usertwo@example.com" },
-  { name: "Name Three", surname: "Surname Three", password: "password3", type: "user", username: "userthree", email: "userthree@example.com" },
+  { firstName: "Name One", lastName: "Surname One", password: "password1", type: "admin", username: "userone", email: "userone@example.com" },
+  { firstName: "Name Two", lastName: "Surname Two", password: "password2", type: "moderator", username: "usertwo", email: "usertwo@example.com" },
+  { firstName: "Name Three", lastName: "Surname Three", password: "password3", type: "user", username: "userthree", email: "userthree@example.com" },
 ];
 
 export const testPois = [

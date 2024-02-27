@@ -51,5 +51,16 @@ export function userFirestoreStore(firestore) {
       const user = await this.getUserById(id);
       return user === null; // returns true if deletion was successful
     },
+
+    async deleteAll() {
+      const snapshot = await firestore.collection(collectionName).get();
+      const batch = firestore.batch();
+
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      return true; // You might want to return something more informative
+    },
   };
 }

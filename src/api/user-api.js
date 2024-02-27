@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
-import { UserSpec } from "../models/joi-schemas.js";
+import { UserSpec, UserSpecPlus, UserArray, IdSpec } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
 
@@ -61,8 +61,32 @@ export const userApi = {
     tags: ["api"],
     description: "Create a User",
     notes: "Returns the newly created user",
-    validate: { payload: UserSpec, failAction: validationError },
+    validate: { payload: UserSpecPlus, failAction: validationError },
     response: { schema: UserSpecPlus, failAction: validationError },
+  },
+
+  deleteOne: {
+    auth: {
+      strategy: "jwt",
+    },
+    validate: {
+      params: IdSpec,
+      failAction: validationError,
+    },
+    handler: async (request, h) => {
+      try {
+        const userDeleted = await db.userStore.deleteUserById(request.params.id);
+        if (!userDeleted) {
+          return Boom.notFound("User not found or unable to delete");
+        }
+        return h.response({ success: true, message: "User deleted successfully" }).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Delete a specific user",
+    notes: "Removes a user from RecreoSpot",
   },
 
   deleteAll: {

@@ -17,6 +17,13 @@ import { db } from "./models/db.js";
 
 dotenv.config();
 
+const swaggerOptions = {
+  info: {
+    title: "RecreoSpot API",
+    version: "0.1",
+  },
+};
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

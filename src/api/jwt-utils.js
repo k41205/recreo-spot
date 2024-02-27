@@ -2,24 +2,26 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { db } from "../models/db.js";
 
-dotenv.config();
+const result = dotenv.config();
 
 export function createToken(user) {
   const payload = {
-    id: user.id,
+    id: user._id,
+    email: user.email,
   };
   const options = {
     algorithm: "HS256",
     expiresIn: "1h",
   };
-  return jwt.sign(payload, process.env.COOKIE_PASSWORD, options);
+  return jwt.sign(payload, process.env.cookie_password, options);
 }
 
 export function decodeToken(token) {
   const userInfo = {};
   try {
-    const decoded = jwt.verify(token, process.env.COOKIE_PASSWORD);
+    const decoded = jwt.verify(token, process.env.cookie_password);
     userInfo.userId = decoded.id;
+    userInfo.email = decoded.email;
   } catch (e) {
     console.log(e.message);
   }
