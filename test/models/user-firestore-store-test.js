@@ -2,11 +2,11 @@ import { expect } from "chai";
 import { db } from "../../src/models/db.js";
 import { testUsers } from "../fixtures.js";
 
-describe("User Model Firestore Tests", () => {
+describe("User Model Firestore", () => {
   before(async () => {
     // Initialize Firestore and switch to the test collection
     db.init("firestore");
-    db.userStore.isCollectionTest(true);
+    db.userStore.setCollectionTest(true);
 
     // Clear the users-test collection before the test
     const users = await db.userStore.getAllUsers();

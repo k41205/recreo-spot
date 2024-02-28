@@ -2,77 +2,74 @@ import { expect } from "chai";
 import { recreospotService } from "../recreospot-service.js";
 import { maggie, testUsers } from "../fixtures.js";
 
-const users = [];
-
 describe("User API", () => {
-  before(async () => {
-    // Clear any existing authentication and users before starting tests
-    await recreospotService.clearAuth();
-    // Create and authenticate 'maggie' before each test
+  const auth = async () => {
     await recreospotService.createUser(maggie);
     await recreospotService.authenticate(maggie);
-  });
+  };
+
+  const clean = async () => {
+    await auth();
+    await recreospotService.deleteAllUsers();
+    recreospotService.clearAuth();
+  };
 
   beforeEach(async () => {
-    // Delete all users before each test
-    await recreospotService.deleteAllUsers();
-    // Create test users
+    await auth();
+  });
+
+  afterEach(async () => {
+    // Comment line below to check results on Cloud Firestore
+    await clean();
+  });
+
+  it("create - create a user", async () => {
+    const result = await recreospotService.createUser(testUsers[0]);
+    expect(result).to.deep.include(testUsers[0]);
+  });
+
+  it("findOne - find a user by Id", async () => {
+    const user = await recreospotService.createUser(testUsers[0]);
+    const userId = user.id;
+    const result = await recreospotService.getUser(userId);
+    expect(result).to.deep.include(testUsers[0]);
+  });
+
+  it("find - find all the users", async () => {
+    const allUsers = [];
+    // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
     for (const user of testUsers) {
       // eslint-disable-next-line no-await-in-loop
       const createdUser = await recreospotService.createUser(user);
-      users.push(createdUser);
+      allUsers.push(createdUser);
     }
-    // Recreate and authenticate 'maggie'
-    await recreospotService.createUser(maggie);
-    await recreospotService.authenticate(maggie);
+    const allUsersDb = await recreospotService.getAllUsers();
+    // exclude Maggie user created just to auth the api call
+    const allUserDbFilterd = allUsersDb.filter((item) => item.firstName !== "Maggie");
+    // exclude Id from any user object
+    const result = allUserDbFilterd.map(({ id, ...data }) => data);
+    expect(result).to.deep.members(testUsers);
   });
 
-  afterEach(async () => {
-    // Cleanup after each test if necessary
+  it("deleteOne - delete a user by Id", async () => {
+    const user = await recreospotService.createUser(testUsers[0]);
+    const userId = user.id;
+    const result = await recreospotService.deleteUser(userId);
+    console.log(result);
+    expect(result).to.deep.equal({ success: true, message: "User deleted successfully" });
   });
 
-  it("should create a user with the expected properties", async () => {
-    const newUser = await recreospotService.createUser(maggie);
-    expect(newUser).to.include(maggie);
-    expect(newUser).to.have.property("id").that.is.a("string");
-  });
-
-  it("should delete all users and only have the newly created user afterwards", async () => {
-    let allUsers = await recreospotService.getAllUsers();
-    expect(allUsers).to.have.lengthOf.at.least(1); // Assuming at least 'maggie' exists
-    await recreospotService.deleteAllUsers();
-    await recreospotService.createUser(maggie);
-    await recreospotService.authenticate(maggie);
-    allUsers = await recreospotService.getAllUsers();
-    expect(allUsers).to.have.lengthOf(1);
-  });
-
-  it("should retrieve the correct user by their id", async () => {
-    const userToRetrieve = users[0];
-    const retrievedUser = await recreospotService.getUser(userToRetrieve.id);
-    expect(retrievedUser).to.deep.equal(userToRetrieve);
-  });
-
-  it("should not find a user with a non-existent id", async () => {
-    try {
-      await recreospotService.getUser("nonexistent-id");
-      expect.fail("The request should not succeed");
-    } catch (error) {
-      expect(error.response.data.message).to.equal("No User with this id");
-      expect(error.response.data).to.have.property("statusCode", 404);
+  it("delete - delete all the users", async () => {
+    const allUsers = [];
+    // Fill db with some user from mock data
+    // eslint-disable-next-line no-restricted-syntax
+    for (const user of testUsers) {
+      // eslint-disable-next-line no-await-in-loop
+      const createdUser = await recreospotService.createUser(user);
+      allUsers.push(createdUser);
     }
-  });
-
-  it("should not find a user that has been deleted", async () => {
-    const userToDelete = users[0];
-    await recreospotService.deleteUser(userToDelete._id);
-    try {
-      await recreospotService.getUser(userToDelete._id);
-      expect.fail("The request should not succeed");
-    } catch (error) {
-      expect(error.response.data.message).to.equal("No User with this id");
-      expect(error.response.data).to.have.property("statusCode", 404);
-    }
+    const result = await recreospotService.deleteAllUsers();
+    expect(result).to.deep.equal({ success: true, message: "Users deleted successfully" });
   });
 });

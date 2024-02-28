@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import Inert from "@hapi/inert";
 import Vision from "@hapi/vision";
 import Hapi from "@hapi/hapi";
@@ -8,14 +9,18 @@ import Jwt from "hapi-auth-jwt2";
 import HapiSwagger from "hapi-swagger";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
-import dotenv from "dotenv";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { validate } from "./api/jwt-utils.js";
 import { webRoutes } from "./web-routes.js";
 import { apiRoutes } from "./api-routes.js";
 import { db } from "./models/db.js";
 
-dotenv.config();
+if (process.env.NODE_ENV === "production") {
+  dotenv.config();
+} else {
+  dotenv.config({ path: ".env.development" });
+}
+console.log(`ENV: ${process.env.NODE_ENV}`);
 
 const swaggerOptions = {
   info: {
@@ -75,7 +80,8 @@ async function init() {
   });
   server.auth.default("session");
 
-  db.init("firestore");
+  console.log(`DB: ${process.env.FIRESTORE_INSTANCE}`);
+  db.init(process.env.FIRESTORE_INSTANCE);
   server.route(webRoutes);
   server.route(apiRoutes);
   await server.start();

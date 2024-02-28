@@ -2,13 +2,10 @@ import { expect } from "chai";
 import { db } from "../../src/models/db.js";
 import { testPois } from "../fixtures.js";
 
-describe("POI Model Firestore Tests", () => {
+describe("POI Model Firestore", () => {
   // eslint-disable-next-line func-names
   beforeEach(async function () {
     this.timeout(5000); // Set timeout to 5 seconds
-    // Initialize Firestore and switch to the test collection
-    db.init("firestore");
-    db.poiStore.isCollectionTest(true);
 
     // Clear the pois-test collection before each test
     const pois = await db.poiStore.getAllPois();

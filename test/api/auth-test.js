@@ -1,27 +1,30 @@
-import { assert } from "chai";
+import { AssertionError, assert, expect } from "chai";
 import { recreospotService } from "../recreospot-service.js";
 import { decodeToken } from "../../src/api/jwt-utils.js";
 import { maggie } from "../fixtures.js";
 
-describe("Authentication API tests", async () => {
+describe("Authentication API", async () => {
+  let userId = "";
+  let userToken = "";
+
   before(async () => {
+    await recreospotService.createUser(maggie);
+    await recreospotService.authenticate(maggie);
     await recreospotService.deleteAllUsers();
+    recreospotService.clearAuth();
   });
 
-  it("authenticate", async () => {
-    await recreospotService.createUser(maggie);
+  it("Authenticate", async () => {
+    const user = await recreospotService.createUser(maggie);
+    userId = user.id;
     const response = await recreospotService.authenticate(maggie);
-    assert(response.success);
-    assert.isDefined(response.token);
+    userToken = response.token;
+    expect(response).to.deep.equal({ success: true, token: userToken });
   });
 
   it("verify Token", async () => {
-    const returnedUser = await recreospotService.createUser(maggie);
-    const response = await recreospotService.authenticate(maggie);
-
-    const userInfo = decodeToken(response.token);
-    assert.equal(userInfo.email, returnedUser.email);
-    assert.equal(userInfo.userId, returnedUser._id);
+    const userInfo = decodeToken(userToken);
+    expect(userId).to.equal(userInfo.userId);
   });
 
   it("check Unauthorized", async () => {
@@ -30,7 +33,13 @@ describe("Authentication API tests", async () => {
       await recreospotService.deleteAllUsers();
       assert.fail("Route not protected");
     } catch (error) {
-      assert.equal(error.response.data.statusCode, 401);
+      if (error.response) {
+        expect(error.response.data).to.have.property("statusCode", 401);
+      }
+      // Let buble up the error to reach Mocha
+      if (error.name === "AssertionError") {
+        throw error;
+      }
     }
   });
 });

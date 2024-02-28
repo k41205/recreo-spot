@@ -5,22 +5,24 @@ import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
 
 export const userApi = {
-  find: {
-    auth: {
-      strategy: "jwt",
-    },
+  create: {
+    auth: false,
     handler: async (request, h) => {
       try {
-        const users = await db.userStore.getAllUsers();
-        return users;
+        const user = await db.userStore.addUser(request.payload);
+        if (user) {
+          return h.response(user).code(201);
+        }
+        return Boom.badImplementation("error creating user");
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Get all userApi",
-    notes: "Returns details of all userApi",
-    response: { schema: UserArray, failAction: validationError },
+    description: "Create a User",
+    notes: "Returns the newly created user",
+    validate: { payload: UserSpecPlus, failAction: validationError },
+    response: { schema: UserSpecPlus, failAction: validationError },
   },
 
   findOne: {
@@ -45,24 +47,22 @@ export const userApi = {
     response: { schema: UserSpecPlus, failAction: validationError },
   },
 
-  create: {
-    auth: false,
+  find: {
+    auth: {
+      strategy: "jwt",
+    },
     handler: async (request, h) => {
       try {
-        const user = await db.userStore.addUser(request.payload);
-        if (user) {
-          return h.response(user).code(201);
-        }
-        return Boom.badImplementation("error creating user");
+        const users = await db.userStore.getAllUsers();
+        return users;
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Create a User",
-    notes: "Returns the newly created user",
-    validate: { payload: UserSpecPlus, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    description: "Get all userApi",
+    notes: "Returns details of all userApi",
+    response: { schema: UserArray, failAction: validationError },
   },
 
   deleteOne: {
@@ -89,21 +89,21 @@ export const userApi = {
     notes: "Removes a user from RecreoSpot",
   },
 
-  deleteAll: {
+  delete: {
     auth: {
       strategy: "jwt",
     },
     handler: async (request, h) => {
       try {
-        await db.userStore.deleteAll();
-        return h.response().code(204);
+        await db.userStore.deleteAllUsers();
+        return h.response({ success: true, message: "Users deleted successfully" }).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Delete all userApi",
-    notes: "All userApi removed from RecreoSpot",
+    description: "Delete all users",
+    notes: "All users removed from RecreoSpot",
   },
 
   authenticate: {

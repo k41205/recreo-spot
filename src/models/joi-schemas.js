@@ -21,3 +21,9 @@ export const UserSpecPlus = UserSpec.keys({
 }).label("UserDetailsPlus");
 
 export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
+
+export const PoiSpec = Joi.object()
+  .keys({
+    name: Joi.string().required().example("Pub"),
+  })
+  .label("Poi");
