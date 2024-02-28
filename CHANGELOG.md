@@ -1,3 +1,16 @@
+# [0.5.0](https://github.com/k41205/recreo-spot/compare/v0.4.0...v0.5.0) (2024-02-28)
+
+
+### Bug Fixes
+
+* **api:** solve problem on api calls and add tests ([7dd0a00](https://github.com/k41205/recreo-spot/commit/7dd0a00783847ec5b983d122e5b80b4bf05c9991))
+
+
+### Features
+
+* **pois api:** implement pois api with supporting tests ([ddac90b](https://github.com/k41205/recreo-spot/commit/ddac90b326a7eaeac1264c7df4724bce32521d0c))
+* **user-api:** implement JWT to work with API and user API ([9b1a249](https://github.com/k41205/recreo-spot/commit/9b1a249204730c562d8724c281fb4ac5d1e4d8c4))
+
 # [0.4.0](https://github.com/k41205/recreo-spot/compare/v0.3.0...v0.4.0) (2024-02-26)
 
 
