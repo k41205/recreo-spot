@@ -30,6 +30,7 @@ export const accountsController = {
   showLogin: {
     auth: false,
     async handler(request, h) {
+      await db.userStore.deleteAll();
       return h.view("login-view", { title: "Login to RecreoSpot" });
     },
   },

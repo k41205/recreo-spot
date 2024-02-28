@@ -1,14 +1,14 @@
-// Set a default collection name
-let collectionName = "users";
-
 export function userFirestoreStore(firestore) {
   return {
-    isCollectionTest(boolean) {
-      collectionName = boolean ? "users-test" : "users";
+    // Set a default collection name
+    collectionName: "users",
+
+    setCollectionTest(boolean) {
+      this.collectionName = boolean ? "users-test" : "users";
     },
 
     async addUser(userData) {
-      const userRef = await firestore.collection(collectionName).add(userData);
+      const userRef = await firestore.collection(this.collectionName).add(userData);
       const userSnap = await userRef.get();
       if (!userSnap.exists) {
         throw new Error("Failed to create a new user.");
@@ -17,12 +17,12 @@ export function userFirestoreStore(firestore) {
     },
 
     async getUserById(id) {
-      const userSnap = await firestore.collection(collectionName).doc(id).get();
+      const userSnap = await firestore.collection(this.collectionName).doc(id).get();
       return userSnap.exists ? { id: userSnap.id, ...userSnap.data() } : null;
     },
 
     async getUserByUsername(username) {
-      const userQuerySnapshot = await firestore.collection(collectionName).where("username", "==", username).get();
+      const userQuerySnapshot = await firestore.collection(this.collectionName).where("username", "==", username).get();
       if (userQuerySnapshot.empty) {
         return null;
       }
@@ -32,7 +32,7 @@ export function userFirestoreStore(firestore) {
     },
 
     async getUserByEmail(email) {
-      const userQuerySnapshot = await firestore.collection(collectionName).where("email", "==", email).get();
+      const userQuerySnapshot = await firestore.collection(this.collectionName).where("email", "==", email).get();
       if (userQuerySnapshot.empty) {
         return null;
       }
@@ -42,14 +42,25 @@ export function userFirestoreStore(firestore) {
     },
 
     async getAllUsers() {
-      const snapshot = await firestore.collection(collectionName).get();
+      const snapshot = await firestore.collection(this.collectionName).get();
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
     async deleteUserById(id) {
-      await firestore.collection(collectionName).doc(id).delete();
+      await firestore.collection(this.collectionName).doc(id).delete();
       const user = await this.getUserById(id);
       return user === null; // returns true if deletion was successful
+    },
+
+    async deleteAllUsers() {
+      const snapshot = await firestore.collection(this.collectionName).get();
+      const batch = firestore.batch();
+
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      return true;
     },
   };
 }

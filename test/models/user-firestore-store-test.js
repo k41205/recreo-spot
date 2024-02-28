@@ -1,14 +1,14 @@
 import { expect } from "chai";
-import { db } from "../src/models/db.js";
-import { testUsers } from "./fixtures.js";
+import { db } from "../../src/models/db.js";
+import { testUsers } from "../fixtures.js";
 
-describe("User Model Firestore Tests", () => {
-  beforeEach(async () => {
+describe("User Model Firestore", () => {
+  before(async () => {
     // Initialize Firestore and switch to the test collection
     db.init("firestore");
-    db.userStore.isCollectionTest(true);
+    db.userStore.setCollectionTest(true);
 
-    // Clear the users-test collection before each test
+    // Clear the users-test collection before the test
     const users = await db.userStore.getAllUsers();
     // eslint-disable-next-line no-restricted-syntax
     for (const user of users) {
