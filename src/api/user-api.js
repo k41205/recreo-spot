@@ -61,8 +61,31 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Get all userApi",
-    notes: "Returns details of all userApi",
+    notes: "Returns details of all users",
     response: { schema: UserArray, failAction: validationError },
+  },
+
+  update: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const userId = request.params.id;
+        const updateData = request.payload;
+        const updatedUser = await db.userStore.updateUser(userId, updateData);
+        if (updatedUser) {
+          return h.response(updatedUser).code(200);
+        }
+        return Boom.notFound("User not found");
+      } catch (err) {
+        console.error(err);
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Update a specific user",
+    notes: "Updates a user details",
   },
 
   deleteOne: {
@@ -86,7 +109,7 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Delete a specific user",
-    notes: "Removes a user from RecreoSpot",
+    notes: "Removes a user",
   },
 
   delete: {
@@ -103,7 +126,7 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Delete all users",
-    notes: "All users removed from RecreoSpot",
+    notes: "All users removed",
   },
 
   authenticate: {

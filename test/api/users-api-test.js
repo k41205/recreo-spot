@@ -20,7 +20,7 @@ describe("User API", () => {
 
   afterEach(async () => {
     // Comment line below to check results on Cloud Firestore
-    await clean();
+    // await clean();
   });
 
   it("create - create a user", async () => {

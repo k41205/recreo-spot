@@ -46,6 +46,17 @@ export function userFirestoreStore(firestore) {
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
+    async updateUser(id, updateData) {
+      const userRef = firestore.collection(this.collectionName).doc(id);
+      console.log(updateData);
+      await userRef.update(updateData);
+      const updatedUserSnap = await userRef.get();
+      if (!updatedUserSnap.exists) {
+        throw new Error("User not found.");
+      }
+      return { id: updatedUserSnap.id, ...updatedUserSnap.data() };
+    },
+
     async deleteUserById(id) {
       await firestore.collection(this.collectionName).doc(id).delete();
       const user = await this.getUserById(id);

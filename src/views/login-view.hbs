@@ -1,16 +1,20 @@
-<section class="section">
-  <h1 class="title">Log in</h1>
-  <form action="/authenticate" method="POST">
-    <div class="field">
-      <label class="label">Email</label>
-      <input class="input" type="text" placeholder="Enter email" name="email" />
-    </div>
-    <div class="field">
-      <label class="label">Password</label>
-      <input class="input" type="password" placeholder="Enter Password" name="password" />
-    </div>
-    <div class="field is-grouped">
-      <button class="button is-link">Submit</button>
-    </div>
-  </form>
+<section class="login-view">
+  <h1 class="brand">Recreo Spot</h1>
+  <h3 class="login-view__title">Get some fun tonight!</h3>
+  <div class="login-view__container">
+    <article class="auth">
+      <h2 class="auth__title">Login</h2>
+      <form action="/authenticate" method="post" class="auth__form">
+        <div class="auth__field"><label for="email">Email:</label>
+          <input type="email" id="email" name="email" required /></div>
+        <div class="auth__field"><label for="password">Password:</label>
+          <input type="password" id="password" name="password" required /></div>
+        <button type="submit">Enter</button>
+      </form>
+    </article>
+    <article class="login-view__image"><img src="images/login.png" alt="login img" /></article>
+    <article class="signup">
+      <h2 class="signup__title">Signup</h2>
+    </article>
+  </div>
 </section>

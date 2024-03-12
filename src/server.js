@@ -14,6 +14,7 @@ import { validate } from "./api/jwt-utils.js";
 import { webRoutes } from "./web-routes.js";
 import { apiRoutes } from "./api-routes.js";
 import { db } from "./models/db.js";
+import { eq } from "./utils/handlebars-helpers.js";
 
 if (process.env.NODE_ENV === "production") {
   dotenv.config();
@@ -51,6 +52,9 @@ async function init() {
 
   server.validator(Joi);
 
+  // Register the helpers
+  Handlebars.registerHelper("eq", eq);
+
   server.views({
     engines: {
       hbs: Handlebars,
@@ -78,7 +82,7 @@ async function init() {
     validate: validate,
     verifyOptions: { algorithms: ["HS256"] },
   });
-  server.auth.default("session");
+  server.auth.default("jwt");
 
   console.log(`DB: ${process.env.FIRESTORE_INSTANCE}`);
   db.init(process.env.FIRESTORE_INSTANCE);

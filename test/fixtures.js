@@ -4,7 +4,7 @@ export const maggie = { firstName: "Maggie", lastName: "Simpson", password: "pas
 
 export const testUsers = [
   { firstName: "Name One", lastName: "Surname One", password: "password1", type: "admin", username: "userone", email: "userone@example.com" },
-  { firstName: "Name Two", lastName: "Surname Two", password: "password2", type: "moderator", username: "usertwo", email: "usertwo@example.com" },
+  { firstName: "Name Two", lastName: "Surname Two", password: "password2", type: "mod", username: "usertwo", email: "usertwo@example.com" },
   { firstName: "Name Three", lastName: "Surname Three", password: "password3", type: "user", username: "userthree", email: "userthree@example.com" },
 ];
 
