@@ -1,3 +1,11 @@
+# [0.6.0](https://github.com/k41205/recreo-spot/compare/v0.5.0...v0.6.0) (2024-03-16)
+
+
+### Features
+
+* **views/controller:** implement profile and user view and controller, rework on all views ([922684b](https://github.com/k41205/recreo-spot/commit/922684b64c88c83b7660bc6b60e1c323fd4127bb))
+* **views:** implement admin view and redefine its controller ([8d48d5d](https://github.com/k41205/recreo-spot/commit/8d48d5d7010f5d25a8d9a28787d30be3bcc68c4b))
+
 # [0.5.0](https://github.com/k41205/recreo-spot/compare/v0.4.0...v0.5.0) (2024-02-28)
 
 
