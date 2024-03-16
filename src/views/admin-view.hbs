@@ -1,30 +1,35 @@
+<script type="module" src="/js/admin.js"></script>
+
 {{> menu}}
 
 <section class="analytics">
-    <h3 class="analytics__title">Analytics</h3>
-    <div class="analytics__container">
+  <h3 class="analytics__title">Analytics</h3>
+  <div class="analytics__container">
     <article class="analytics__users">
-        <div class="analytics__box">
-            <p class="analytics__text">Tot. users: {{users.length}}</p>
-            <ul>
-              {{#each users}}
-                <li class="analytics__row"><span class="analytics__element">{{this.firstName}}</span><span class="analytics__element">{{this.email}} </span> <span class="analytics__element"> {{this.type}} </span>{{#if (eq this.type "user")}}
-                    <span class="analytics__element"><button class="analytics__button" data-user-id="{{this.id}}" data-action="promote">Promote to Mod</button></span>
-                  {{/if}}{{#if (eq this.type "mod")}}
-                    <span class="analytics__element"><button class="analytics__button" data-user-id="{{this.id}}" data-action="demote">Demote to User</button></span>
-                  {{/if}}</li>
-                
-              {{/each}}
-            </ul>
-        </div>
+      <div class="analytics__box">
+        <p class="analytics__text">Tot. users: {{ users.length }}</p>
+        <ul>
+          {{#each users}}
+          <li class="analytics__row">
+            <span class="analytics__element">{{ this.firstName }}</span
+            ><span class="analytics__element">{{ this.email }} </span> <span class="analytics__element"> {{ this.type }} </span>{{#if (eq this.type "user")}}
+            <span class="analytics__element"><button class="analytics__button" data-user-id="{{ this.id }}" data-action="promote">Promote to Mod</button></span>
+            {{/if}}{{#if (eq this.type "mod")}}
+            <span class="analytics__element"><button class="analytics__button" data-user-id="{{ this.id }}" data-action="demote">Demote to User</button></span>
+            {{/if}}
+          </li>
+
+          {{/each}}
+        </ul>
+      </div>
     </article>
     <article class="analytics__pois">
       <div class="analytics__box">
-            <p class="analytics__text">Tot. all POIs: {{pois.length}}</p>
-            <p class="analytics__text">Tot. public POIs: {{publicPois.length}}</p>
-            <p class="analytics__text">Tot. candidate POIs: {{candidatePois.length}}</p>
-            <p class="analytics__text">Tot. private POIs: {{privatePois.length}}</p>
-        </div>
+        <p class="analytics__text">Tot. all POIs: {{ pois.length }}</p>
+        <p class="analytics__text">Tot. public POIs: {{ publicPois.length }}</p>
+        <p class="analytics__text">Tot. candidate POIs: {{ candidatePois.length }}</p>
+        <p class="analytics__text">Tot. private POIs: {{ privatePois.length }}</p>
+      </div>
     </article>
-    </div>
+  </div>
 </section>

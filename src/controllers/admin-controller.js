@@ -3,7 +3,8 @@ import { db } from "../models/db.js";
 export const adminController = {
   index: {
     async handler(request, h) {
-      const loggedInUser = request.auth.credentials;
+      const userId = request.auth.credentials.id;
+      const loggedInUser = await db.userStore.getUserById(userId);
       const users = await db.userStore.getAllUsers();
       const pois = await db.poiStore.getAllPois();
       const publicPois = pois.filter((poi) => poi.isPublic === true);

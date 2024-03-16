@@ -1,0 +1,22 @@
+<script type="module" src="/js/profile.js"></script>
+
+{{>menu}}
+
+<section class="profile">
+  <div class="profile__container" data-user-id="{{ id }}">
+    <article class="profile__user">
+      <h3 class="profile__title">My Profile</h3>
+      <p class="profile__detail" id="firstNameProfile">{{ firstName }}</p>
+      <p class="profile__detail" id="lastNameProfile">{{ lastName }}</p>
+      <p class="profile__detail" id="emailProfile">{{ email }}</p>
+      <a href="/" class="profile__button">Delete profile</a>
+    </article>
+    <form class="form">
+      <h3 class="form__title">Edit Details</h3>
+      <span class="form__field"><label for="email" class="form__label">Email: </label><input id="email" type="text" class="form__input" /></span>
+      <span class="form__field"><label for="password" class="form__label">Password: </label><input id="password" type="password" class="form__input" /></span>
+      <a class="form__button">Update</a>
+    </form>
+  </div>
+  <p class="profile-event"></p>
+</section>

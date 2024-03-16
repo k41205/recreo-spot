@@ -48,7 +48,6 @@ export function userFirestoreStore(firestore) {
 
     async updateUser(id, updateData) {
       const userRef = firestore.collection(this.collectionName).doc(id);
-      console.log(updateData);
       await userRef.update(updateData);
       const updatedUserSnap = await userRef.get();
       if (!updatedUserSnap.exists) {

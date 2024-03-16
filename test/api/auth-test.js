@@ -1,5 +1,5 @@
 import { AssertionError, assert, expect } from "chai";
-import { recreospotService } from "../recreospot-service.js";
+import { recreospotService } from "../recreospot-service-test.js";
 import { decodeToken } from "../../src/api/jwt-utils.js";
 import { maggie } from "../fixtures.js";
 

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const recreospotService = {
   recreospotUrl: "http://DESKTOP-9FOLU4E:3000",
 
@@ -72,6 +74,11 @@ export const recreospotService = {
 
   async getAllPois() {
     const res = await axios.get(`${this.recreospotUrl}/api/pois`);
+    return res.data;
+  },
+
+  async updatePoi(id, updateData) {
+    const res = await axios.post(`${this.recreospotUrl}/api/pois/${id}`, updateData);
     return res.data;
   },
 

@@ -8,7 +8,8 @@
     "start": "cross-env NODE_ENV=production node src/server.js",
     "dev": "cross-env NODE_ENV=development nodemon src/server.js",
     "lint": "eslint . --ext .js",
-    "test": "mocha --require dotenv/config --ui bdd test/**/*.js --exit"
+    "test": "mocha --require dotenv/config --ui bdd test/**/*.js --exit",
+    "reset-db": "node src/utils/reset-db.js --run"
   },
   "author": "Giacomo Cavarretta",
   "license": "ISC",

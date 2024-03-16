@@ -1,5 +1,10 @@
-<section class="dashboard" id="dashboard">
-  <!-- POIs will be inserted here -->
+{{>menu}}
+
+<script type="module" src="/js/user.js"></script>
+
+<section class="user-view">
+  <div class="dashboard" data-user-id="{{ id }}">
+    <div id="userMap"></div>
+    <div class="dashboard__panel" id="poiDetails"></div>
+  </div>
 </section>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/js/test.js"></script>

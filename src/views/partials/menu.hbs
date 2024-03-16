@@ -1,14 +1,18 @@
+<script type="module" src="/js/menu.js"></script>
+
 <nav class="menu">
   <ul class="menu__ul">
-    <li class="menu__li"><h2 class="brand">RecreoSpot</h2></li>
+    <li class="menu__li">
+      <a href="/"><h2 class="brand">RecreoSpot</h2></a>
+    </li>
     <div class="menu__profile">
-      <li class="menu__li">{{username}}</li>
+      <li class="menu__li">{{ username }}</li>
       <li class="menu__li">
         <div class="menu__dropdown">
           <div class="icon-profile"></div>
           <div class="menu__dropdown-content" id="dropdown-content">
-            <a href="/profile">Profile</a>
-            <a href="/logout">Logout</a>
+            <a class="menu__link" href="/profile">Profile</a>
+            <a class="menu__link" href="/logout">Logout</a>
           </div>
         </div>
       </li>

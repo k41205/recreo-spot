@@ -28,5 +28,5 @@ export async function validate(decoded, request) {
   if (!user) {
     return { isValid: false };
   }
-  return { isValid: true, credentials: user };
+  return { isValid: true, credentials: user.id };
 }

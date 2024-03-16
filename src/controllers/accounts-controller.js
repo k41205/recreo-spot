@@ -17,15 +17,23 @@ export const accountsController = {
   },
   signup: {
     auth: false,
-    validate: {
-      payload: UserSpec,
-      options: { abortEarly: false },
-      failAction: (request, h, error) => h.view("signup-view", { title: "Sign up error", errors: error.details }).takeover().code(400),
-    },
     handler: async (request, h) => {
       const user = { type: "user", ...request.payload };
-      await db.userStore.addUser(user);
-      return h.redirect("/dashboard");
+      const newUser = await db.userStore.addUser(user);
+      if (newUser) {
+        const token = createToken(newUser);
+        h.state("token", token, {
+          isHttpOnly: true,
+          path: "/",
+          isSecure: false, // In production it should be true
+          // SameSite: "Strict", // Optional
+        });
+
+        // Redirect to the dashboard
+        return h.redirect("/user");
+      }
+      // Error page if user type is unknown
+      return h.redirect("/login");
     },
   },
   showLogin: {
@@ -42,6 +50,7 @@ export const accountsController = {
       failAction: (request, h, error) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
     },
     handler: async (request, h) => {
+      console.log(request.payload);
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
       if (!user || user.password !== password) {
@@ -69,6 +78,7 @@ export const accountsController = {
     },
   },
   logout: {
+    auth: false,
     handler: async (request, h) =>
       h
         .response("Logged out")

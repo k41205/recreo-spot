@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { recreospotService } from "../recreospot-service.js";
+import { recreospotService } from "../recreospot-service-test.js";
 import { maggie, testUsers } from "../fixtures.js";
 
 describe("User API", () => {

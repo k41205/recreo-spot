@@ -1,8 +1,7 @@
-import { recreospotService } from "./clientApi.js";
+import { recreospotService } from "./recreospot-service-client.js";
 
 document.addEventListener("click", async (event) => {
   const { target } = event;
-  console.log(event);
 
   if (target.classList.contains("analytics__button")) {
     const userId = target.getAttribute("data-user-id");
@@ -19,10 +18,5 @@ document.addEventListener("click", async (event) => {
     } catch (error) {
       console.error("Error updating user:", error);
     }
-  }
-
-  if (target.classList.contains("icon-profile")) {
-    const dropDownContent = document.querySelector(".menu__dropdown-content");
-    dropDownContent.classList.toggle("show");
   }
 });
