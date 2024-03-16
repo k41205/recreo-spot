@@ -113,6 +113,29 @@ export const poiApi = {
     notes: "Returns all POIs details",
   },
 
+  update: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const poiId = request.params.id;
+        const updateData = request.payload;
+        const updatedPoi = await db.poiStore.updatePoi(poiId, updateData);
+        if (updatedPoi) {
+          return h.response(updatedPoi).code(200);
+        }
+        return Boom.notFound("User not found");
+      } catch (err) {
+        console.error(err);
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+    tags: ["api"],
+    description: "Update a specific POI",
+    notes: "Updates a POI details",
+  },
+
   deleteOne: {
     auth: {
       strategy: "jwt",

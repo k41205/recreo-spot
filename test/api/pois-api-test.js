@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { maggie, testPois, testUsers } from "../fixtures.js";
-import { recreospotService } from "../recreospot-service.js";
+import { recreospotService } from "../recreospot-service-test.js";
 
 describe("POI API", () => {
   const auth = async () => {
@@ -21,7 +21,7 @@ describe("POI API", () => {
 
   afterEach(async () => {
     // Comment line below to check results on Cloud Firestore
-    await clean();
+    // await clean();
   });
 
   it("create - create a POI", async () => {

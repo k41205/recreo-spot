@@ -8,7 +8,7 @@ export function poiFirestoreStore(firestore) {
     },
 
     async addPoi(userId, poiData) {
-      const poiDataWithAuthor = { author: userId, ...poiData };
+      const poiDataWithAuthor = { author: userId, isPublic: false, isCandidate: false, ...poiData };
       const poiRef = await firestore.collection(this.collectionName).add(poiDataWithAuthor);
       const poiSnap = await poiRef.get();
       if (!poiSnap.exists) {
@@ -49,6 +49,17 @@ export function poiFirestoreStore(firestore) {
     async getAllPois() {
       const snapshot = await firestore.collection(this.collectionName).get();
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    },
+
+    async updatePoi(id, updateData) {
+      const poiRef = firestore.collection(this.collectionName).doc(id);
+      console.log(updateData);
+      await poiRef.update(updateData);
+      const updatedPoiSnap = await poiRef.get();
+      if (!updatedPoiSnap.exists) {
+        throw new Error("POI not found.");
+      }
+      return { id: updatedPoiSnap.id, ...updatedPoiSnap.data() };
     },
 
     async deletePoiById(id) {

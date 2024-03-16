@@ -7,6 +7,7 @@ export const apiRoutes = [
   { method: "POST", path: "/api/users", config: userApi.create },
   { method: "GET", path: "/api/users", config: userApi.find },
   { method: "GET", path: "/api/users/{id}", config: userApi.findOne },
+  { method: "POST", path: "/api/users/{id}", config: userApi.update },
   { method: "DELETE", path: "/api/users/{id}", config: userApi.deleteOne },
   { method: "DELETE", path: "/api/users", config: userApi.delete },
 
@@ -16,6 +17,7 @@ export const apiRoutes = [
   { method: "GET", path: "/api/pois/public", config: poiApi.findPublicPois },
   { method: "GET", path: "/api/pois/candidate", config: poiApi.findCandidatePois },
   { method: "GET", path: "/api/pois", config: poiApi.find },
+  { method: "POST", path: "/api/pois/{id}", config: poiApi.update },
   { method: "DELETE", path: "/api/pois/{id}", config: poiApi.deleteOne },
   { method: "DELETE", path: "/api/pois", config: poiApi.delete },
 ];

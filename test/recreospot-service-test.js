@@ -1,8 +1,7 @@
 import axios from "axios";
-import { serviceUrl } from "./fixtures.js";
 
 export const recreospotService = {
-  recreospotUrl: serviceUrl,
+  recreospotUrl: "http://DESKTOP-9FOLU4E:3000",
 
   async authenticate(user) {
     const response = await axios.post(`${this.recreospotUrl}/api/users/authenticate`, user);
@@ -27,6 +26,11 @@ export const recreospotService = {
     } catch (e) {
       return null;
     }
+  },
+
+  async updateUser(id, updateData) {
+    const res = await axios.post(`${this.recreospotUrl}/api/users/${id}`, updateData);
+    return res.data;
   },
 
   async deleteUser(id) {
@@ -70,6 +74,11 @@ export const recreospotService = {
 
   async getAllPois() {
     const res = await axios.get(`${this.recreospotUrl}/api/pois`);
+    return res.data;
+  },
+
+  async updatePoi(id, updateData) {
+    const res = await axios.post(`${this.recreospotUrl}/api/pois/${id}`, updateData);
     return res.data;
   },
 
