@@ -18,9 +18,6 @@ const profileEventDOM = document.querySelector(".profile-event");
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("profile__button")) {
     recreospotService.deleteUser(userId);
-    // recreospotService.clearAuth();
-    // console.log("ok");
-    // need to logout user
   }
   if (e.target.classList.contains("form__button")) {
     if (formDOM.email.value === "" || formDOM.password.value === "") {

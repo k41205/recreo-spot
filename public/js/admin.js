@@ -7,16 +7,12 @@ document.addEventListener("click", async (event) => {
     const userId = target.getAttribute("data-user-id");
     const action = target.getAttribute("data-action");
 
-    try {
-      let response;
-      if (action === "promote") {
-        response = await recreospotService.updateUser(userId, { type: "mod" });
-      } else if (action === "demote") {
-        response = await recreospotService.updateUser(userId, { type: "user" });
-      }
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating user:", error);
+    let response;
+    if (action === "promote") {
+      response = await recreospotService.updateUser(userId, { type: "mod" });
+    } else if (action === "demote") {
+      response = await recreospotService.updateUser(userId, { type: "user" });
     }
+    window.location.reload();
   }
 });

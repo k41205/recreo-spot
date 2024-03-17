@@ -3,7 +3,18 @@ import { db } from "../models/db.js";
 import { usersDev, poisDev } from "../../test/fixtures.js";
 
 dotenv.config();
-db.init("firestore-test");
+
+const isDev = process.argv.includes("--dev");
+const isProd = process.argv.includes("--prod");
+
+if (isDev) {
+  db.init("firestore-test");
+} else if (isProd) {
+  db.init("firestore");
+} else {
+  console.log("Please specify the environment: --dev or --prod");
+  process.exit(1);
+}
 
 const allUsers = [];
 

@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon src/server.js",
+    "start-dev": "npm run reset-test-db && node src/server.js",
+    "watch": "cross-env NODE_ENV=development nodemon src/server.js",
     "lint": "eslint . --ext .js",
     "test": "mocha --exit",
-    "reset-db": "node src/utils/reset-db.js --run"
+    "reset-test-db": "node src/utils/reset-db.js --run --dev",
+    "reset-db": "node src/utils/reset-db.js --run --prod"
   },
   "author": "Giacomo Cavarretta",
   "license": "ISC",
@@ -27,7 +29,6 @@
     "hapi-swagger": "^17.2.1",
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
-    "lowdb": "^7.0.1",
     "mongoose": "^8.1.2",
     "uuid": "^9.0.1"
   },

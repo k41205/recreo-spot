@@ -56,7 +56,6 @@ export const poiApi = {
     handler: async (request, h) => {
       try {
         const pois = await db.poiStore.getPoisByUser(request.params.userId);
-        console.log(request.params.userId);
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for user's POIs");
@@ -137,7 +136,6 @@ export const poiApi = {
         }
         return Boom.notFound("User not found");
       } catch (err) {
-        console.error(err);
         return Boom.serverUnavailable("Database Error");
       }
     },
