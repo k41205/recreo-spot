@@ -1,3 +1,15 @@
+# [0.7.0](https://github.com/k41205/recreo-spot/compare/v0.6.0...v0.7.0) (2024-03-17)
+
+
+### Bug Fixes
+
+* **css:** improve css, some rework on controllers ([df48284](https://github.com/k41205/recreo-spot/commit/df48284607e8b6112c57ef0a494875e274e0b1ca))
+
+
+### Features
+
+* **joy validation:** create and implement validation schemes on controllers and APIs ([1300a2b](https://github.com/k41205/recreo-spot/commit/1300a2beef0e67d0beb5eebe13c3efc1f7475d2f))
+
 # [0.6.0](https://github.com/k41205/recreo-spot/compare/v0.5.0...v0.6.0) (2024-03-16)
 
 
