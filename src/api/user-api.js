@@ -80,7 +80,6 @@ export const userApi = {
         }
         return Boom.notFound("User not found");
       } catch (err) {
-        console.error(err);
         return Boom.serverUnavailable("Database Error");
       }
     },

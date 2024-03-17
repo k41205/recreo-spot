@@ -71,8 +71,7 @@ async function init() {
     cookie: {
       name: "session",
       password: process.env.COOKIE_PASSWORD,
-      // Should be true in production
-      isSecure: false,
+      isSecure: process.env.NODE_ENV === "production",
     },
     redirectTo: "/",
     validate: accountsController.validate,

@@ -31,7 +31,7 @@ export const accountsController = {
         h.state("token", token, {
           isHttpOnly: true,
           path: "/",
-          isSecure: false, // In production it should be true
+          isSecure: process.env.NODE_ENV === "production",
           // SameSite: "Strict", // Optional
         });
         // Redirect to the dashboard
@@ -58,7 +58,7 @@ export const accountsController = {
       h.state("token", token, {
         isHttpOnly: true,
         path: "/",
-        isSecure: false, // In production it should be true
+        isSecure: process.env.NODE_ENV === "production",
         // SameSite: "Strict", // Optional
       });
       // Check user type and redirect to the appropriate dashboard
@@ -80,7 +80,7 @@ export const accountsController = {
         .response("Logged out")
         .unstate("token", {
           path: "/",
-          isSecure: false,
+          isSecure: process.env.NODE_ENV === "production",
           // SameSite: "Strict",
         })
         .redirect("/"),

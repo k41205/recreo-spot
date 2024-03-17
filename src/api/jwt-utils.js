@@ -14,12 +14,10 @@ export function createToken(user) {
 
 export function decodeToken(token) {
   const userInfo = {};
-  try {
-    const decoded = jwt.verify(token, process.env.COOKIE_PASSWORD);
-    userInfo.userId = decoded.id;
-  } catch (e) {
-    console.log(e.message);
-  }
+
+  const decoded = jwt.verify(token, process.env.COOKIE_PASSWORD);
+  userInfo.userId = decoded.id;
+
   return userInfo;
 }
 
