@@ -1,3 +1,10 @@
+## [0.7.2](https://github.com/k41205/recreo-spot/compare/v0.7.1...v0.7.2) (2024-03-17)
+
+
+### Bug Fixes
+
+* **url-api:** change url for api client side ([38db8d8](https://github.com/k41205/recreo-spot/commit/38db8d86ef51a52c0f3c7929c34d544745b75b2b))
+
 ## [0.7.1](https://github.com/k41205/recreo-spot/compare/v0.7.0...v0.7.1) (2024-03-17)
 
 
