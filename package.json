@@ -1,6 +1,6 @@
 {
   "name": "recreo-spot",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "An app to look for recreational entertainment POIs, based on Leaflet and OpenStreetMap",
   "main": "src/server.js",
   "type": "module",
