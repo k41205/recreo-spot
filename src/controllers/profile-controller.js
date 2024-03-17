@@ -5,8 +5,6 @@ export const profileController = {
     async handler(request, h) {
       const userId = request.auth.credentials.id;
       const loggedInUser = await db.userStore.getUserById(userId);
-      console.log(userId);
-      console.log(loggedInUser);
       const viewData = {
         id: loggedInUser.id,
         username: loggedInUser.username,
@@ -15,13 +13,6 @@ export const profileController = {
         email: loggedInUser.email,
         password: loggedInUser.password,
       };
-      return h.view("profile-view", viewData);
-    },
-  },
-  updateProfile: {
-    async handler(request, h) {
-      // call updateUser function
-      const viewData = {};
       return h.view("profile-view", viewData);
     },
   },

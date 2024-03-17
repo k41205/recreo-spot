@@ -1,4 +1,5 @@
 import { recreospotService } from "./recreospot-service-client.js";
+import { runError } from "./errors-csr.js";
 
 const map = L.map("userMap").setView([53.3571, -6.2512], 11); // Set default coordinates and zoom level
 
@@ -128,16 +129,20 @@ document.getElementById("poiDetails").addEventListener("submit", async (event) =
       name: document.getElementById("poiName").value,
       description: document.getElementById("poiDescription").value,
     };
+    try {
+      const poiCreated = await recreospotService.createPoi(formData);
+      userPoiIds.push(poiCreated.id);
 
-    const poiCreated = await recreospotService.createPoi(formData);
-    userPoiIds.push(poiCreated.id);
-
-    if (tempMarker) {
-      map.removeLayer(tempMarker);
-      tempMarker = null;
+      if (tempMarker) {
+        map.removeLayer(tempMarker);
+        tempMarker = null;
+      }
+      await loadPois();
+      emptyDetailsDiv();
+    } catch (error) {
+      const { errors } = error.response.data;
+      runError(errors);
     }
-    await loadPois();
-    emptyDetailsDiv();
   }
 
   if (event.target && event.target.id === "poiModifyForm") {

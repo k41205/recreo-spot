@@ -1,5 +1,5 @@
 import { db } from "../models/db.js";
-import { UserSpec, UserCredentialsSpec } from "../models/joi-schemas.js";
+import { UserCreatePayload, UserCredentialsPayload } from "../models/joi-schemas.js";
 import { createToken } from "../api/jwt-utils.js";
 
 export const accountsController = {
@@ -9,14 +9,20 @@ export const accountsController = {
       return h.view("main", { title: "Welcome to RecreoSpot" });
     },
   },
-  showSignup: {
+  showLogin: {
     auth: false,
     async handler(request, h) {
-      return h.view("signup-view", { title: "Sign up for RecreoSpot" });
+      return h.view("login-view", { title: "Login to RecreoSpot" });
     },
   },
   signup: {
     auth: false,
+    validate: {
+      payload: UserCreatePayload,
+      options: { abortEarly: false },
+      failAction: (request, h, error) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
+    },
+    // eslint-disable-next-line consistent-return
     handler: async (request, h) => {
       const user = { type: "user", ...request.payload };
       const newUser = await db.userStore.addUser(user);
@@ -28,33 +34,26 @@ export const accountsController = {
           isSecure: false, // In production it should be true
           // SameSite: "Strict", // Optional
         });
-
         // Redirect to the dashboard
         return h.redirect("/user");
       }
-      // Error page if user type is unknown
-      return h.redirect("/login");
-    },
-  },
-  showLogin: {
-    auth: false,
-    async handler(request, h) {
-      return h.view("login-view", { title: "Login to RecreoSpot" });
     },
   },
   login: {
     auth: false,
     validate: {
-      // payload: UserCredentialsSpec,
+      payload: UserCredentialsPayload,
       options: { abortEarly: false },
       failAction: (request, h, error) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
     },
+    // eslint-disable-next-line consistent-return
     handler: async (request, h) => {
       console.log(request.payload);
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
       if (!user || user.password !== password) {
-        return h.redirect("/");
+        const errors = [{ message: !user ? "User not found." : "Invalid email or password." }];
+        return h.view("login-view", { title: "Log in error", errors: errors }).takeover().code(400);
       }
       const token = createToken(user);
       h.state("token", token, {
@@ -73,8 +72,6 @@ export const accountsController = {
       if (user.type === "user") {
         return h.redirect("/user");
       }
-      // Error page if user type is unknown
-      return h.redirect("/login");
     },
   },
   logout: {
@@ -89,7 +86,6 @@ export const accountsController = {
         })
         .redirect("/"),
   },
-
   async validate(request, session) {
     const user = await db.userStore.getUserById(session.id);
     if (!user) {

@@ -5,9 +5,9 @@ export const maggie = { firstName: "Maggie", lastName: "Simpson", password: "pas
 export const testUsers = [
   { firstName: "Admin", lastName: "Istrator", password: "root", type: "admin", username: "admin", email: "admin@example.com" },
   { firstName: "Mod", lastName: "Erator", password: "soot", type: "mod", username: "mod", email: "mod@example.com" },
-  { firstName: "Name1", lastName: "Surname1", password: "123", type: "user", username: "user1", email: "user1@example.com" },
-  { firstName: "Name2", lastName: "Surname2", password: "123", type: "user", username: "user2", email: "user2@example.com" },
-  { firstName: "Name3", lastName: "Surname3", password: "123", type: "user", username: "user3", email: "user3@example.com" },
+  { firstName: "Name1", lastName: "Surname1", password: "123456", type: "user", username: "user1", email: "user1@example.com" },
+  { firstName: "Name2", lastName: "Surname2", password: "123456", type: "user", username: "user2", email: "user2@example.com" },
+  { firstName: "Name3", lastName: "Surname3", password: "123456", type: "user", username: "user3", email: "user3@example.com" },
 ];
 
 export const testPois = [

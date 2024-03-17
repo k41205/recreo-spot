@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
-import { UserSpec, UserSpecPlus, UserArray, IdSpec } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
+import { UserIdSpec, UserCreatePayload, UserSchema, UserUpdatePayload, UserCredentialsPayload, UserArray } from "../models/joi-schemas.js";
 
 export const userApi = {
   create: {
@@ -13,16 +13,16 @@ export const userApi = {
         if (user) {
           return h.response(user).code(201);
         }
-        return Boom.badImplementation("error creating user");
+        return Boom.badImplementation("Error creating user");
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
     },
     tags: ["api"],
-    description: "Create a User",
+    description: "Create a user",
     notes: "Returns the newly created user",
-    validate: { payload: UserSpecPlus, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    validate: { payload: UserCreatePayload, failAction: validationError },
+    response: { schema: UserSchema, failAction: validationError },
   },
 
   findOne: {
@@ -42,9 +42,9 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Get a specific user",
-    notes: "Returns user details",
-    validate: { params: { id: IdSpec }, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    notes: "Returns user details of the id passed by params",
+    validate: { params: { id: UserIdSpec }, failAction: validationError },
+    response: { schema: UserSchema, failAction: validationError },
   },
 
   find: {
@@ -60,7 +60,7 @@ export const userApi = {
       }
     },
     tags: ["api"],
-    description: "Get all userApi",
+    description: "Get all users",
     notes: "Returns details of all users",
     response: { schema: UserArray, failAction: validationError },
   },
@@ -85,16 +85,14 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Update a specific user",
-    notes: "Updates a user details",
+    notes: "Updates a user details of the id passed by params",
+    validate: { params: { id: UserIdSpec }, payload: UserUpdatePayload, failAction: validationError, options: { abortEarly: false } },
+    response: { schema: UserSchema, failAction: validationError },
   },
 
   deleteOne: {
     auth: {
       strategy: "jwt",
-    },
-    validate: {
-      params: IdSpec,
-      failAction: validationError,
     },
     handler: async (request, h) => {
       try {
@@ -109,7 +107,8 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Delete a specific user",
-    notes: "Removes a user",
+    notes: "Removes user of the id passed by params",
+    validate: { params: { id: UserIdSpec }, failAction: validationError, options: { abortEarly: false } },
   },
 
   delete: {
@@ -126,18 +125,19 @@ export const userApi = {
     },
     tags: ["api"],
     description: "Delete all users",
-    notes: "All users removed",
+    notes: "All users are removed",
   },
 
   authenticate: {
     auth: false,
     handler: async (request, h) => {
       try {
-        const user = await db.userStore.getUserByEmail(request.payload.email);
+        const { email, password } = request.payload;
+        const user = await db.userStore.getUserByEmail(email);
         if (!user) {
           return Boom.unauthorized("User not found");
         }
-        if (user.password !== request.payload.password) {
+        if (user.password !== password) {
           return Boom.unauthorized("Invalid password");
         }
         const token = createToken(user);
@@ -146,5 +146,6 @@ export const userApi = {
         return Boom.serverUnavailable("Database Error");
       }
     },
+    validate: { payload: UserCredentialsPayload, failAction: validationError, options: { abortEarly: false } },
   },
 };
