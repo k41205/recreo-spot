@@ -4,6 +4,10 @@
   "description": "An app to look for recreational entertainment POIs, based on OpenStreetMap",
   "main": "src/server.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k41205/recreo-spot.git"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/server.js",
     "start-dev": "npm run reset-test-db && node src/server.js",
