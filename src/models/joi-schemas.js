@@ -16,16 +16,21 @@ export const UserCredentialsPayload = Joi.object()
   })
   .label("UserLogin");
 
-export const UserUpdatePayload = UserCredentialsPayload.keys({
-  firstName: firstName.required(),
-  lastName: lastName.required(),
-}).label("UserProfileUpdate");
-
 export const UserCreatePayload = UserCredentialsPayload.keys({
   username: username.required(),
   firstName: firstName.required(),
   lastName: lastName.required(),
 }).label("UserSignup");
+
+export const UserUpdatePayload = Joi.object()
+  .keys({
+    firstName,
+    lastName,
+    type,
+    email,
+    password,
+  })
+  .label("UserUpdate");
 
 export const UserSchema = UserCreatePayload.keys({
   type: type.required(),
@@ -34,10 +39,10 @@ export const UserSchema = UserCreatePayload.keys({
 
 export const UserArray = Joi.array().items(UserSchema).label("UserArray");
 
-const lat = Joi.number().example("53.3498");
-const lon = Joi.number().example("-6.2618");
+const lat = Joi.string().example("53.3498");
+const lon = Joi.string().example("-6.2618");
 const name = Joi.string().example("Back Page Pub");
-const description = Joi.string().example("It's a very nice pub with some pools and arcades!");
+const description = Joi.string().example("It's a very nice pub with some pool tables and arcades!");
 const author = Joi.string().example("EriU0nvx7ha1W4yGtflZ");
 const isPublic = Joi.boolean();
 const isCandidate = Joi.boolean();

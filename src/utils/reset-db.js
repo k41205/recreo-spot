@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 import { db } from "../models/db.js";
-import { maggie, testUsers, testPois } from "../../test/fixtures.js";
+import { usersDev, poisDev } from "../../test/fixtures.js";
 
 dotenv.config();
 db.init("firestore-test");
 
 const allUsers = [];
 
-const purgeAll = async () => {
+export const purgeAll = async () => {
   await db.userStore.deleteAllUsers();
   await db.poiStore.deleteAllPois();
 };
@@ -15,7 +15,7 @@ const purgeAll = async () => {
 const seedUsersTestCollection = async () => {
   // Fill db with some user from mock data
   // eslint-disable-next-line no-restricted-syntax
-  for (const user of testUsers) {
+  for (const user of usersDev) {
     // eslint-disable-next-line no-await-in-loop
     const createdUser = await db.userStore.addUser(user);
     allUsers.push(createdUser);
@@ -25,7 +25,7 @@ const seedUsersTestCollection = async () => {
 const seedPoisTestCollection = async (userMapping) => {
   const allPois = [];
   // eslint-disable-next-line no-restricted-syntax
-  for (const poi of testPois) {
+  for (const poi of poisDev) {
     if (userMapping[poi.author]) {
       const userId = userMapping[poi.author];
       const { author, ...poiDataWithoutAuthor } = poi;
@@ -36,8 +36,7 @@ const seedPoisTestCollection = async (userMapping) => {
   }
 };
 
-const resetDb = async () => {
-  await purgeAll();
+export const seeding = async () => {
   await seedUsersTestCollection();
 
   const userMapping = allUsers.reduce((acc, user) => {
@@ -50,5 +49,6 @@ const resetDb = async () => {
 
 // Running the main function if this file is run directly with '--run' flag
 if (process.argv.includes("--run")) {
-  resetDb();
+  purgeAll();
+  seeding();
 }

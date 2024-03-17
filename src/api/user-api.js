@@ -9,9 +9,10 @@ export const userApi = {
     auth: false,
     handler: async (request, h) => {
       try {
-        const user = await db.userStore.addUser(request.payload);
-        if (user) {
-          return h.response(user).code(201);
+        const user = { ...request.payload, type: "user" };
+        const newUser = await db.userStore.addUser(user);
+        if (newUser) {
+          return h.response(newUser).code(201);
         }
         return Boom.badImplementation("Error creating user");
       } catch (err) {

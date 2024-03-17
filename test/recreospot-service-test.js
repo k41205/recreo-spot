@@ -3,8 +3,8 @@ import axios from "axios";
 export const recreospotService = {
   recreospotUrl: "http://DESKTOP-9FOLU4E:3000",
 
-  async authenticate(user) {
-    const response = await axios.post(`${this.recreospotUrl}/api/users/authenticate`, user);
+  async authenticate(credentials) {
+    const response = await axios.post(`${this.recreospotUrl}/api/users/authenticate`, credentials);
     axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;
     return response.data;
   },

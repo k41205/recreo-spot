@@ -2,19 +2,23 @@
 
 {{> menu}}
 
-<section class="analytics">
-  <h3 class="analytics__title">Analytics</h3>
+<section class="admin">
+  <h3 class="admin__title">Analytics</h3>
   <div class="analytics__container">
     <article class="analytics__users">
       <div class="analytics__box">
         <p class="analytics__text">Tot. users: {{ users.length }}</p>
-        <ul>
+        <ul class="analytics__list">
           {{#each users}}
           <li class="analytics__row">
-            <span class="analytics__element">{{ this.firstName }}</span
-            ><span class="analytics__element">{{ this.email }} </span> <span class="analytics__element"> {{ this.type }} </span>{{#if (eq this.type "user")}}
+            <span class="analytics__element">{{ this.firstName }}</span>
+            <span class="analytics__element">{{ this.lastName }}</span>
+            <span class="analytics__element">{{ this.email }} </span>
+            <span class="analytics__element"> {{ this.type }} </span>
+            {{#if (eq this.type "user")}}
             <span class="analytics__element"><button class="analytics__button" data-user-id="{{ this.id }}" data-action="promote">Promote to Mod</button></span>
-            {{/if}}{{#if (eq this.type "mod")}}
+            {{/if}}
+            {{#if (eq this.type "mod")}}
             <span class="analytics__element"><button class="analytics__button" data-user-id="{{ this.id }}" data-action="demote">Demote to User</button></span>
             {{/if}}
           </li>

@@ -48,7 +48,6 @@ export const accountsController = {
     },
     // eslint-disable-next-line consistent-return
     handler: async (request, h) => {
-      console.log(request.payload);
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
       if (!user || user.password !== password) {

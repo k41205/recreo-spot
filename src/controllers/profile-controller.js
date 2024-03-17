@@ -12,6 +12,7 @@ export const profileController = {
         lastName: loggedInUser.lastName,
         email: loggedInUser.email,
         password: loggedInUser.password,
+        type: loggedInUser.type,
       };
       return h.view("profile-view", viewData);
     },

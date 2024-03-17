@@ -1,23 +1,22 @@
-import { AssertionError, assert, expect } from "chai";
+import { assert, expect } from "chai";
 import { recreospotService } from "../recreospot-service-test.js";
 import { decodeToken } from "../../src/api/jwt-utils.js";
 import { maggie } from "../fixtures.js";
+import { purgeAll } from "../../src/utils/reset-db.js";
 
 describe("Authentication API", async () => {
   let userId = "";
   let userToken = "";
 
   before(async () => {
-    await recreospotService.createUser(maggie);
-    await recreospotService.authenticate(maggie);
-    await recreospotService.deleteAllUsers();
-    recreospotService.clearAuth();
+    await purgeAll();
   });
 
   it("Authenticate", async () => {
     const user = await recreospotService.createUser(maggie);
     userId = user.id;
-    const response = await recreospotService.authenticate(maggie);
+    const { email, password } = user;
+    const response = await recreospotService.authenticate({ email, password });
     userToken = response.token;
     expect(response).to.deep.equal({ success: true, token: userToken });
   });
