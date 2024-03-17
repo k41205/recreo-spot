@@ -1,5 +1,5 @@
 export const recreospotService = {
-  recreospotUrl: "http://DESKTOP-9FOLU4E:3000",
+  recreospotUrl: "https://recreo-spot.onrender.com",
 
   async authenticate(user) {
     const response = await axios.post(`${this.recreospotUrl}/api/users/authenticate`, user);
