@@ -22,11 +22,11 @@ Developer tools used during the development:
 
 ### Admin View - Dashboard with analytics
 
-![alt text](image.png)
+![image](https://github.com/k41205/recreo-spot/assets/93975067/5895f89c-682b-4dd4-80d1-d4d778992dd4)
 
 ### User View - Dashboard
 
-![alt text](image-1.png)
+![image-1](https://github.com/k41205/recreo-spot/assets/93975067/8fd1f857-3001-4963-9c34-7325779d3eab)
 
 ## How it works
 
