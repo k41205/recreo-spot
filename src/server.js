@@ -26,7 +26,7 @@ console.log(`ENV: ${process.env.NODE_ENV}`);
 const swaggerOptions = {
   info: {
     title: "RecreoSpot API",
-    version: "0.1",
+    version: "1.0",
   },
 };
 
