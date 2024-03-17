@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/k41205/recreo-spot/compare/v0.7.0...v0.7.1) (2024-03-17)
+
+
+### Bug Fixes
+
+* **secure flag http:** fix problem in production for cookie on unsecure connection and general cleaning ([e689ed5](https://github.com/k41205/recreo-spot/commit/e689ed5bca7e3d0c63de24f0a13a4363507b831d))
+
 # [0.7.0](https://github.com/k41205/recreo-spot/compare/v0.6.0...v0.7.0) (2024-03-17)
 
 
