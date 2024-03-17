@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/k41205/recreo-spot/compare/v0.7.2...v1.0.0) (2024-03-17)
+
+
+### chore
+
+* updated package.json ([72df8ae](https://github.com/k41205/recreo-spot/commit/72df8aeb79917f575e8ed0ec82f6e18969a23b2b))
+
+
+### BREAKING CHANGES
+
+* version 1.0.0 released
+
 ## [0.7.2](https://github.com/k41205/recreo-spot/compare/v0.7.1...v0.7.2) (2024-03-17)
 
 
