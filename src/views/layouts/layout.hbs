@@ -18,6 +18,7 @@
      crossorigin=""></script>
   </head>
   <body>
+    {{#if errors}}<div class="overlay active"></div>{{/if}}
     <main class="main">
       {{{content}}}
       {{> error }}

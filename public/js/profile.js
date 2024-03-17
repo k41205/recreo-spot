@@ -1,4 +1,5 @@
 import { recreospotService } from "./recreospot-service-client.js";
+import { runError } from "./errors-csr.js";
 
 const userId = document.querySelector("[data-user-id]").getAttribute("data-user-id");
 const profileDOM = {
@@ -26,18 +27,24 @@ document.addEventListener("click", async (e) => {
       profileEventDOM.innerText = "The values are empty!";
       return;
     }
-    const dataUpdated = {
-      firstName: profileDOM.firstName.innerText,
-      lastName: profileDOM.lastName.innerText,
-      email: formDOM.email.value,
-      password: formDOM.password.value,
-    };
-    const userUpdated = await recreospotService.updateUser(userId, dataUpdated);
-    profileDOM.email.innerText = userUpdated.email;
 
-    profileEventDOM.innerText = "Profile updated!";
+    try {
+      const dataUpdated = {
+        firstName: profileDOM.firstName.innerText,
+        lastName: profileDOM.lastName.innerText,
+        email: formDOM.email.value,
+        password: formDOM.password.value,
+      };
+      const userUpdated = await recreospotService.updateUser(userId, dataUpdated);
+      profileDOM.email.innerText = userUpdated.email;
 
-    formDOM.email.value = "";
-    formDOM.password.value = "";
+      profileEventDOM.innerText = "Profile updated!";
+
+      formDOM.email.value = "";
+      formDOM.password.value = "";
+    } catch (error) {
+      const { errors } = error.response.data;
+      runError(errors);
+    }
   }
 });

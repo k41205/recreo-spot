@@ -1,11 +1,12 @@
 import { expect } from "chai";
-import { maggie, testPois, testUsers } from "../fixtures.js";
+import { maggie, poisMock } from "../fixtures.js";
 import { recreospotService } from "../recreospot-service-test.js";
 
 describe("POI API", () => {
   const auth = async () => {
-    await recreospotService.createUser(maggie);
-    await recreospotService.authenticate(maggie);
+    const user = await recreospotService.createUser(maggie);
+    const { email, password } = user;
+    await recreospotService.authenticate({ email, password });
   };
 
   const clean = async () => {
@@ -21,37 +22,37 @@ describe("POI API", () => {
 
   afterEach(async () => {
     // Comment line below to check results on Cloud Firestore
-    // await clean();
+    await clean();
   });
 
   it("create - create a POI", async () => {
-    const result = await recreospotService.createPoi(testPois[0]);
-    expect(result).to.deep.include(testPois[0]);
+    const result = await recreospotService.createPoi(poisMock[0]);
+    expect(result).to.deep.include(poisMock[0]);
   });
 
   it("findOne - find a POI by Id", async () => {
-    const poi = await recreospotService.createPoi(testPois[0]);
+    const poi = await recreospotService.createPoi(poisMock[0]);
     const poiId = poi.id;
     const result = await recreospotService.getPoi(poiId);
-    expect(result).to.deep.include(testPois[0]);
+    expect(result).to.deep.include(poisMock[0]);
   });
 
   it("findUserPois - find a POI by user Id", async function () {
     // to review
     this.timeout(5000);
-    const user = await recreospotService.createUser(testUsers[0]);
-    await recreospotService.authenticate(testUsers[0]);
-    const userId = user.id;
-    const allPois = [];
+    const user = await recreospotService.createUser(maggie);
+    const { userId, email, password } = user;
+    await recreospotService.authenticate({ email, password });
+    const allUserPois = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const poi of testPois) {
+    for (const poi of poisMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdPoi = await recreospotService.createPoi(poi);
-      allPois.push(createdPoi);
+      allUserPois.push(createdPoi);
     }
-    const result = allPois.map(({ id, author, ...data }) => data);
-    expect(result).to.deep.members(testPois);
+    const result = allUserPois.map(({ id, author, isCandidate, isPublic, ...data }) => data);
+    expect(result).to.deep.members(poisMock);
   });
 
   it("findPublicPois - find all the public POIs", async function () {
@@ -59,12 +60,12 @@ describe("POI API", () => {
     const allPois = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const poi of testPois) {
+    for (const poi of poisMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdPoi = await recreospotService.createPoi(poi);
       allPois.push(createdPoi);
     }
-    const publicPois = testPois.filter((poi) => poi.isPublic === true);
+    const publicPois = poisMock.filter((poi) => poi.isPublic === true);
     const publicPoisDb = await recreospotService.getPoisPublic();
     const result = publicPoisDb.map(({ id, author, ...data }) => data);
     expect(result).to.deep.members(publicPois);
@@ -75,12 +76,12 @@ describe("POI API", () => {
     const allPois = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const poi of testPois) {
+    for (const poi of poisMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdPoi = await recreospotService.createPoi(poi);
       allPois.push(createdPoi);
     }
-    const candidatePois = testPois.filter((poi) => poi.isCandidate === true);
+    const candidatePois = poisMock.filter((poi) => poi.isCandidate === true);
     const candidatePoisDb = await recreospotService.getPoisCandidate();
     const result = candidatePoisDb.map(({ id, author, ...data }) => data);
     expect(result).to.deep.members(candidatePois);
@@ -91,17 +92,17 @@ describe("POI API", () => {
     const allPois = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const poi of testPois) {
+    for (const poi of poisMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdPoi = await recreospotService.createPoi(poi);
       allPois.push(createdPoi);
     }
-    const result = allPois.map(({ id, author, ...data }) => data);
-    expect(result).to.deep.members(testPois);
+    const result = allPois.map(({ id, author, isCandidate, isPublic, ...data }) => data);
+    expect(result).to.deep.members(poisMock);
   });
 
   it("deleteOne - delete a POI by Id", async () => {
-    const poi = await recreospotService.createPoi(testPois[0]);
+    const poi = await recreospotService.createPoi(poisMock[0]);
     const poiId = poi.id;
     const result = await recreospotService.deletePoi(poiId);
     expect(result).to.deep.equal({ success: true, message: "POI deleted successfully" });
@@ -111,7 +112,7 @@ describe("POI API", () => {
     const allPois = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const poi of testPois) {
+    for (const poi of poisMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdPoi = await recreospotService.createPoi(poi);
       allPois.push(createdPoi);

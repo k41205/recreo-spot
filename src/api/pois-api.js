@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
-import { PoiSpec } from "../models/joi-schemas.js";
+import { PoiCreatePayload, UserIdSpec, PoiIdSpec, PoiSchema, PoiArray } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
 
 export const poiApi = {
@@ -23,6 +23,8 @@ export const poiApi = {
     tags: ["api"],
     description: "Create a POI",
     notes: "Returns the newly created POI",
+    validate: { payload: PoiCreatePayload, failAction: validationError, options: { abortEarly: false } },
+    response: { schema: PoiSchema, failAction: validationError },
   },
 
   findOne: {
@@ -42,7 +44,9 @@ export const poiApi = {
     },
     tags: ["api"],
     description: "Get a specific POI",
-    notes: "Returns POI details",
+    notes: "Returns POI details of the id passed by params",
+    validate: { params: { id: PoiIdSpec }, failAction: validationError, options: { abortEarly: false } },
+    response: { schema: PoiSchema, failAction: validationError },
   },
 
   findUserPois: {
@@ -52,6 +56,7 @@ export const poiApi = {
     handler: async (request, h) => {
       try {
         const pois = await db.poiStore.getPoisByUser(request.params.userId);
+        console.log(request.params.userId);
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for user's POIs");
@@ -59,7 +64,9 @@ export const poiApi = {
     },
     tags: ["api"],
     description: "Get all user's POIs",
-    notes: "Returns details of all user's POIs",
+    notes: "Returns details of all user's POIs of the user id passed by params",
+    validate: { params: { userId: UserIdSpec }, failAction: validationError, options: { abortEarly: false } },
+    response: { schema: PoiArray, failAction: validationError },
   },
 
   findPublicPois: {
@@ -77,6 +84,7 @@ export const poiApi = {
     tags: ["api"],
     description: "Get all public POIs",
     notes: "Returns all public POIs details",
+    response: { schema: PoiArray, failAction: validationError },
   },
 
   findCandidatePois: {
@@ -92,8 +100,9 @@ export const poiApi = {
       }
     },
     tags: ["api"],
-    description: "Get all  candidate POIs",
+    description: "Get all candidate POIs",
     notes: "Returns all candidate POIs details",
+    response: { schema: PoiArray, failAction: validationError },
   },
 
   find: {
@@ -111,6 +120,7 @@ export const poiApi = {
     tags: ["api"],
     description: "Get all POIs",
     notes: "Returns all POIs details",
+    response: { schema: PoiArray, failAction: validationError },
   },
 
   update: {
@@ -133,7 +143,9 @@ export const poiApi = {
     },
     tags: ["api"],
     description: "Update a specific POI",
-    notes: "Updates a POI details",
+    notes: "Updates a POI details of the id passed by params",
+    validate: { params: { id: PoiIdSpec }, payload: PoiCreatePayload, failAction: validationError, options: { abortEarly: false } },
+    response: { schema: PoiSchema, failAction: validationError },
   },
 
   deleteOne: {
@@ -153,7 +165,8 @@ export const poiApi = {
     },
     tags: ["api"],
     description: "Delete a specific POI",
-    notes: "Removes a POI from RecreoSpot",
+    notes: "Removes a POI of the id passed by params",
+    validate: { params: { id: PoiIdSpec }, failAction: validationError, options: { abortEarly: false } },
   },
 
   delete: {
@@ -169,7 +182,7 @@ export const poiApi = {
       }
     },
     tags: ["api"],
-    description: "Delete a specific POI",
-    notes: "Removes a POI from RecreoSpot",
+    description: "Delete all POIs",
+    notes: "Removes all the POIs",
   },
 };

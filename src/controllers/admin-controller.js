@@ -5,7 +5,8 @@ export const adminController = {
     async handler(request, h) {
       const userId = request.auth.credentials.id;
       const loggedInUser = await db.userStore.getUserById(userId);
-      const users = await db.userStore.getAllUsers();
+      const allUsers = await db.userStore.getAllUsers();
+      const usersWithoutAdmin = allUsers.filter((user) => user.type !== "admin");
       const pois = await db.poiStore.getAllPois();
       const publicPois = pois.filter((poi) => poi.isPublic === true);
       const candidatePois = pois.filter((poi) => poi.isCandidate === true);
@@ -13,7 +14,8 @@ export const adminController = {
       const viewData = {
         title: "Admin Dashboard",
         username: loggedInUser.username,
-        users,
+        type: loggedInUser.type,
+        users: usersWithoutAdmin,
         pois,
         publicPois,
         candidatePois,

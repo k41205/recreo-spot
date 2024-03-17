@@ -1,29 +1,74 @@
 import Joi from "joi";
 
-export const IdSpec = Joi.alternatives().try(Joi.string(), Joi.object()).description("a valid ID");
+const username = Joi.string().max(10).example("HomSims");
+const firstName = Joi.string().example("Homer");
+const lastName = Joi.string().example("Simpson");
+const email = Joi.string().email().example("homer@simpson.com");
+const password = Joi.string().min(6).max(16).example("secret");
+const type = Joi.string().valid("user", "mod", "admin");
 
-export const UserCredentialsSpec = Joi.object()
+export const UserIdSpec = Joi.string().required().example("EriU0nvx7ha1W4yGtflZ").label("User Id");
+
+export const UserCredentialsPayload = Joi.object()
   .keys({
-    username: Joi.string().example("hsim").required(),
-    email: Joi.string().email().example("homer@simpson.com").required(),
-    password: Joi.string().example("secret").required(),
+    email: email.required(),
+    password: password.required(),
   })
-  .label("UserCredentials");
+  .label("UserLogin");
 
-export const UserSpec = UserCredentialsSpec.keys({
-  firstName: Joi.string().example("Homer").required(),
-  lastName: Joi.string().example("Simpson").required(),
-}).label("UserDetails");
+export const UserCreatePayload = UserCredentialsPayload.keys({
+  username: username.required(),
+  firstName: firstName.required(),
+  lastName: lastName.required(),
+}).label("UserSignup");
 
-export const UserSpecPlus = UserSpec.keys({
-  id: IdSpec,
-  type: Joi.string(),
-}).label("UserDetailsPlus");
-
-export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
-
-export const PoiSpec = Joi.object()
+export const UserUpdatePayload = Joi.object()
   .keys({
-    name: Joi.string().required().example("Pub"),
+    firstName,
+    lastName,
+    type,
+    email,
+    password,
   })
-  .label("Poi");
+  .label("UserUpdate");
+
+export const UserSchema = UserCreatePayload.keys({
+  type: type.required(),
+  id: UserIdSpec.required(),
+}).label("UserObject");
+
+export const UserArray = Joi.array().items(UserSchema).label("UserArray");
+
+const lat = Joi.string().example("53.3498");
+const lon = Joi.string().example("-6.2618");
+const name = Joi.string().example("Back Page Pub");
+const description = Joi.string().example("It's a very nice pub with some pool tables and arcades!");
+const author = Joi.string().example("EriU0nvx7ha1W4yGtflZ");
+const isPublic = Joi.boolean();
+const isCandidate = Joi.boolean();
+
+export const PoiIdSpec = Joi.string().example("EriU0nvx7ha1W4yGtflZ").label("Poi Id");
+
+export const PoiCreatePayload = Joi.object()
+  .keys({
+    lat: lat.required(),
+    lon: lon.required(),
+    name: name.required(),
+    description: description.required(),
+  })
+  .label("PoiUpdate");
+
+export const PoiCreateSpec = PoiCreatePayload.keys({
+  author: author.required(),
+  isPublic: isPublic.required(),
+  isCandidate: isCandidate.required(),
+}).label("PoiCreate");
+
+export const PoiSchema = PoiCreatePayload.keys({
+  id: PoiIdSpec.required(),
+  author: author.required(),
+  isPublic: isPublic.required(),
+  isCandidate: isCandidate.required(),
+}).label("PoiObject");
+
+export const PoiArray = Joi.array().items(PoiSchema).label("PoiArray");

@@ -1,11 +1,12 @@
 import { expect } from "chai";
 import { recreospotService } from "../recreospot-service-test.js";
-import { maggie, testUsers } from "../fixtures.js";
+import { usersMock, maggie } from "../fixtures.js";
 
 describe("User API", () => {
   const auth = async () => {
-    await recreospotService.createUser(maggie);
-    await recreospotService.authenticate(maggie);
+    const user = await recreospotService.createUser(maggie);
+    const { email, password } = user;
+    await recreospotService.authenticate({ email, password });
   };
 
   const clean = async () => {
@@ -20,26 +21,26 @@ describe("User API", () => {
 
   afterEach(async () => {
     // Comment line below to check results on Cloud Firestore
-    // await clean();
+    await clean();
   });
 
   it("create - create a user", async () => {
-    const result = await recreospotService.createUser(testUsers[0]);
-    expect(result).to.deep.include(testUsers[0]);
+    const result = await recreospotService.createUser(usersMock[0]);
+    expect(result).to.deep.include(usersMock[0]);
   });
 
   it("findOne - find a user by Id", async () => {
-    const user = await recreospotService.createUser(testUsers[0]);
+    const user = await recreospotService.createUser(usersMock[0]);
     const userId = user.id;
     const result = await recreospotService.getUser(userId);
-    expect(result).to.deep.include(testUsers[0]);
+    expect(result).to.deep.include(usersMock[0]);
   });
 
   it("find - find all the users", async () => {
     const allUsers = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const user of testUsers) {
+    for (const user of usersMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdUser = await recreospotService.createUser(user);
       allUsers.push(createdUser);
@@ -48,12 +49,12 @@ describe("User API", () => {
     // exclude Maggie user created just to auth the api call
     const allUserDbFilterd = allUsersDb.filter((item) => item.firstName !== "Maggie");
     // exclude Id from any user object
-    const result = allUserDbFilterd.map(({ id, ...data }) => data);
-    expect(result).to.deep.members(testUsers);
+    const result = allUserDbFilterd.map(({ id, type, ...data }) => data);
+    expect(result).to.deep.members(usersMock);
   });
 
   it("deleteOne - delete a user by Id", async () => {
-    const user = await recreospotService.createUser(testUsers[0]);
+    const user = await recreospotService.createUser(usersMock[0]);
     const userId = user.id;
     const result = await recreospotService.deleteUser(userId);
     console.log(result);
@@ -64,7 +65,7 @@ describe("User API", () => {
     const allUsers = [];
     // Fill db with some user from mock data
     // eslint-disable-next-line no-restricted-syntax
-    for (const user of testUsers) {
+    for (const user of usersMock) {
       // eslint-disable-next-line no-await-in-loop
       const createdUser = await recreospotService.createUser(user);
       allUsers.push(createdUser);

@@ -75,6 +75,42 @@ section {
   width: 100%;
 }
 
+/* Error section */
+.ovelay {
+  display: none;
+}
+
+.overlay.active {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgb(12, 23, 19, 0.8);
+  z-index: 998;
+}
+
+.error {
+  display: none;
+}
+
+.error.active {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: red;
+  background-color: #0c1713;
+  width: 600px;
+  border-radius: 20px;
+  z-index: 999;
+  display: block;
+}
+
+.error__ul {
+  list-style: none;
+  margin-top: 20px;
+}
+
 /* Landing page */
 
 .hero-background {
@@ -94,6 +130,7 @@ section {
 
 .hero__brand {
   text-align: center;
+  cursor: default;
 }
 
 .header {
@@ -205,7 +242,6 @@ section {
 /* Login page */
 
 .login-view {
-  height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -219,6 +255,11 @@ section {
 .login-view__container {
   display: flex;
   justify-content: space-around;
+}
+
+.login-view__image > img {
+  border-radius: 12px;
+  width: 500px;
 }
 
 .auth,
@@ -300,6 +341,7 @@ button {
 .menu__profile {
   display: flex;
   gap: 30px;
+  width: 130px;
 }
 
 .icon-profile {
@@ -332,7 +374,7 @@ button {
 
 /* ADMIN PAGE */
 
-.analytics {
+.admin {
   padding: 80px 80px;
   gap: 30px;
   display: flex;
@@ -340,35 +382,56 @@ button {
   align-items: center;
 }
 
+.analytics__text {
+  text-align: center;
+}
+
 .analytics__container {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 100px;
 }
-
+/* margin: 0 auto 0 0; */
 .analytics__box {
   display: flex;
   flex-direction: column;
+  gap: 50px;
+}
+
+.analytics__list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
 
 .analytics__row {
-  display: flex;
-  gap: 20px;
+  display: contents;
+}
+
+.analytics__button {
+}
+
+.analytics__element {
+  text-align: center;
 }
 
 /* USER PAGE */
 
-#userMap {
+#userMap,
+#modMap {
   height: 30rem;
   width: 50rem;
 }
 
 .user-view {
-  padding: 40px 80px;
+  padding: 0 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.user-view__title {
+  padding: 80px;
 }
 
 .dashboard {
@@ -442,6 +505,19 @@ button {
 #poiSubmitButton:hover,
 #updatePoiButton:hover {
   box-shadow: var(--neon-button);
+}
+
+/* MODERATOR PAGE */
+
+.mod-view {
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mod-view__title {
+  padding: 80px;
 }
 
 /* PROFILE PAGE */
