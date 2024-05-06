@@ -9,6 +9,7 @@ export const webRoutes = [
   { method: "GET", path: "/login", config: accountsController.showLogin },
   { method: "GET", path: "/logout", config: accountsController.logout },
   { method: "POST", path: "/signup", config: accountsController.signup },
+  { method: "POST", path: "/google-login", config: accountsController.googleLogin },
   { method: "POST", path: "/authenticate", config: accountsController.login },
   { method: "GET", path: "/admin", config: adminController.index },
   { method: "GET", path: "/mod", config: modController.index },

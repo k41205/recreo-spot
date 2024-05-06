@@ -284,6 +284,15 @@ section {
   gap: 10px;
 }
 
+.auth__google {
+  width: 100%;
+}
+
+#google-login-btn {
+  width: 100%;
+}
+
+#google-login-btn,
 .auth__button,
 .signup__button {
   font-family: "Inter";
@@ -298,6 +307,7 @@ section {
   transition: all 0.3s;
 }
 
+#google-login-btn,
 .auth__button:hover,
 .signup__button:hover {
   box-shadow: var(--neon-button);
@@ -321,7 +331,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 50px;
+  padding: 0 60px;
 }
 
 .menu__li {
