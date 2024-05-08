@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/k41205/recreo-spot/compare/v1.0.0...v1.1.0) (2024-05-08)
+
+
+### Features
+
+* **auth:** implement auth Firebase with Google provider ([913ef7a](https://github.com/k41205/recreo-spot/commit/913ef7ae687e001c4b6054eb08600f606754cd8a))
+
 # [1.0.0](https://github.com/k41205/recreo-spot/compare/v0.7.2...v1.0.0) (2024-03-17)
 
 
