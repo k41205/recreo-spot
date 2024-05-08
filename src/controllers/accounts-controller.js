@@ -1,3 +1,4 @@
+import admin from "firebase-admin";
 import { db } from "../models/db.js";
 import { UserCreatePayload, UserCredentialsPayload } from "../models/joi-schemas.js";
 import { createToken } from "../api/jwt-utils.js";
@@ -70,6 +71,55 @@ export const accountsController = {
       }
       if (user.type === "user") {
         return h.redirect("/user");
+      }
+    },
+  },
+  googleLogin: {
+    auth: false,
+    // eslint-disable-next-line consistent-return
+    handler: async (request, h) => {
+      const { token } = request.payload; // Token received from client side ?????????????
+      try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        let user = await db.userStore.getUserByEmail(decodedToken.email);
+        let userCreated;
+        if (!user) {
+          // CHECK THIS PART, NEED TO TEST CREATION AS WELL
+          const [name, surname] = decodedToken.name.split(" ");
+          const newUser = {
+            email: decodedToken.email,
+            firstName: name,
+            lastName: surname,
+            password: null,
+            type: "user",
+            username: ["user", decodedToken.uid.slice(0, 4)].join("-"),
+          };
+          user = await db.userStore.addUser(newUser);
+        }
+        const sessionToken = createToken(user); // create a session token
+        h.state("token", sessionToken, {
+          isHttpOnly: true,
+          path: "/",
+          isSecure: process.env.NODE_ENV === "production",
+        });
+        // Check user type and redirect to the appropriate dashboard
+        let redirectUrl = "/";
+        if (user.type === "admin") {
+          redirectUrl = "/admin";
+        }
+        if (user.type === "mod") {
+          redirectUrl = "/mod";
+        }
+        if (user.type === "user") {
+          redirectUrl = "/user";
+        }
+        return h.response({ redirectUrl: redirectUrl }).code(200);
+      } catch (error) {
+        console.error("Failed to authenticate:", error);
+        return h
+          .view("login-view", { title: "Log in error", errors: [{ message: "Authentication failed" }] })
+          .takeover()
+          .code(400);
       }
     },
   },
