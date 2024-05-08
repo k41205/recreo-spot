@@ -67,6 +67,15 @@ async function init() {
     isCached: false,
   });
 
+  server.ext("onPreResponse", (request, h) => {
+    const { response } = request;
+    if (response.variety === "view") {
+      response.source.context = response.source.context || {};
+      response.source.context.baseUrl = process.env.API_BASE_URL;
+    }
+    return h.continue;
+  });
+
   server.auth.strategy("session", "cookie", {
     cookie: {
       name: "session",

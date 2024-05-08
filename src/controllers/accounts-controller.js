@@ -76,15 +76,13 @@ export const accountsController = {
   },
   googleLogin: {
     auth: false,
-    // eslint-disable-next-line consistent-return
     handler: async (request, h) => {
-      const { token } = request.payload; // Token received from client side ?????????????
+      const { token } = request.payload;
       try {
         const decodedToken = await admin.auth().verifyIdToken(token);
         let user = await db.userStore.getUserByEmail(decodedToken.email);
         let userCreated;
         if (!user) {
-          // CHECK THIS PART, NEED TO TEST CREATION AS WELL
           const [name, surname] = decodedToken.name.split(" ");
           const newUser = {
             email: decodedToken.email,
@@ -96,7 +94,7 @@ export const accountsController = {
           };
           user = await db.userStore.addUser(newUser);
         }
-        const sessionToken = createToken(user); // create a session token
+        const sessionToken = createToken(user);
         h.state("token", sessionToken, {
           isHttpOnly: true,
           path: "/",
