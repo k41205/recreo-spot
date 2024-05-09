@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/k41205/recreo-spot/compare/v1.1.0...v1.2.0) (2024-05-09)
+
+
+### Features
+
+* implement favourite feat and relative panel ([087c118](https://github.com/k41205/recreo-spot/commit/087c11882e794f9c0395ab19ce6bb03d225ad0eb))
+
 # [1.1.0](https://github.com/k41205/recreo-spot/compare/v1.0.0...v1.1.0) (2024-05-08)
 
 
