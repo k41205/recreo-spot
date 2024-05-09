@@ -41,6 +41,21 @@ export const recreospotService = {
     return res.data;
   },
 
+  async getUserFavorites() {
+    const res = await axios.get(`${this.recreospotUrl}/api/users/favorites`);
+    return res.data;
+  },
+
+  async addFavorite(poiId, poiName) {
+    const res = await axios.post(`${this.recreospotUrl}/api/users/favorites`, { poiId, poiName });
+    return res.data;
+  },
+
+  async removeFavorite(poiId) {
+    const res = await axios.post(`${this.recreospotUrl}/api/users/favorite/remove`, { poiId });
+    return res.data;
+  },
+
   clearAuth() {
     axios.defaults.headers.common.Authorization = "";
   },

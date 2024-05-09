@@ -1,4 +1,4 @@
-export function userFirestoreStore(firestore) {
+export function userFirestoreStore(firestore, FieldValue) {
   return {
     // Set a default collection name
     collectionName: "users",
@@ -71,6 +71,51 @@ export function userFirestoreStore(firestore) {
       });
       await batch.commit();
       return true;
+    },
+
+    async getUserFavorites(userId) {
+      const userRef = await firestore.collection(this.collectionName).doc(userId);
+      const userSnap = await userRef.get();
+      if (!userSnap.exists) {
+        throw new Error("User not found.");
+      }
+      const userData = userSnap.data();
+      return userData.favorites || [];
+    },
+
+    async addFavorite(userId, poiId, poiName) {
+      const userRef = await firestore.collection(this.collectionName).doc(userId);
+      try {
+        await userRef.update({
+          favorites: FieldValue.arrayUnion({
+            id: poiId,
+            name: poiName,
+          }),
+        });
+        return { success: true, message: "Favorite added" };
+      } catch (error) {
+        console.error("Failed to add favorite:", error);
+        throw new Error("Failed to add favorite");
+      }
+    },
+
+    async removeFavorite(userId, poiId) {
+      const userRef = await firestore.collection(this.collectionName).doc(userId);
+      const userSnap = await userRef.get();
+      if (!userSnap.exists) {
+        throw new Error("User not found.");
+      }
+      const userData = userSnap.data();
+      const updatedFavorites = userData.favorites.filter((fav) => fav.id !== poiId);
+      try {
+        await userRef.update({
+          favorites: updatedFavorites,
+        });
+        return { success: true, message: "Favorite removed" };
+      } catch (error) {
+        console.error("Failed to remove favorite:", error);
+        throw new Error("Failed to remove favorite");
+      }
     },
   };
 }

@@ -16,8 +16,23 @@ let currName;
 let currDescription;
 let tempLat;
 let tempLng;
+let currFavs;
 
 const poiDetailsDiv = document.getElementById("poiDetails");
+const favorites = document.getElementById("favorites-pois");
+
+const updateFavorites = async () => {
+  const favs = await recreospotService.getUserFavorites();
+  let list = "";
+  if (favs.length === 0) list = "";
+  else {
+    favs.forEach((item) => {
+      list += `<p>${item.name}</p>`;
+    });
+  }
+  favorites.innerHTML = list;
+  currFavs = favs.map((fav) => fav.id);
+};
 
 const createMarkerIcon = (color) =>
   `<svg width="35" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +40,7 @@ const createMarkerIcon = (color) =>
   </svg>`;
 
 function getPoiDetails(poi) {
-  // Assuming you have a div with the ID 'details' to display the POI details
+  const fav = currFavs.includes(poi.id) ? "<div id='favorite'></div>" : "<div id='unfavorite'></div>";
   poiDetailsDiv.innerHTML = `
   <p class="poi-title" id="poiName">${poi.name}</p>
   <div class="poi-box">
@@ -34,7 +49,9 @@ function getPoiDetails(poi) {
   <p class="poi-info" id="poiDescription">${poi.description}</p>
   </div>
   ${userPoiIds.includes(poi.id) ? "<button id='updatePoiButton'>Modify POI</button>" : ""}
+  ${poi.isPublic ? fav : ""}
   `;
+  currName = document.getElementById("poiName").textContent;
 }
 
 function addPoiToMap(poi, iconColor) {
@@ -55,7 +72,6 @@ function addPoiToMap(poi, iconColor) {
 const loadPois = async () => {
   const userId = document.querySelector("[data-user-id]").getAttribute("data-user-id");
   const [userPois, publicPois] = await Promise.all([recreospotService.getPoisByUser(userId), recreospotService.getPoisPublic()]);
-
   // Determine color based on POI type
   userPois.forEach((poi) => {
     if (!poi.isCandidate) userPoiIds.push(poi.id);
@@ -115,6 +131,22 @@ document.getElementById("poiDetails").addEventListener("click", async (event) =>
   }
   if (event.target && event.target.id === "updatePoiButton") {
     modifyPoiForm();
+  }
+});
+
+// Handle click using event delegation
+document.getElementById("poiDetails").addEventListener("click", async (event) => {
+  if (event.target.id === "unfavorite") {
+    await recreospotService.addFavorite(currPoiId, currName);
+    document.getElementById("unfavorite").id = "favorite";
+    await updateFavorites();
+    return;
+  }
+  if (event.target.id === "favorite") {
+    await recreospotService.removeFavorite(currPoiId);
+    document.getElementById("favorite").id = "unfavorite";
+    await updateFavorites();
+    return;
   }
 });
 
@@ -183,3 +215,4 @@ map.on("click", (event) => {
 });
 
 await loadPois();
+updateFavorites();
