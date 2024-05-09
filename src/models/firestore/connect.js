@@ -9,5 +9,7 @@ export function connectFirestore() {
     });
   }
 
-  return admin.firestore();
+  const firestore = admin.firestore();
+  const fieldValue = admin.firestore.FieldValue;
+  return { firestore, fieldValue };
 }

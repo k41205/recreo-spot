@@ -148,4 +148,56 @@ export const userApi = {
     },
     validate: { payload: UserCredentialsPayload, failAction: validationError, options: { abortEarly: false } },
   },
+
+  getFavorites: {
+    auth: {
+      strategy: "jwt",
+    },
+    handler: async (request, h) => {
+      try {
+        const userId = request.auth.credentials.id;
+        const favorites = await db.userStore.getUserFavorites(userId);
+        return h.response(favorites).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable(`Database Error: ${err.message}`);
+      }
+    },
+    tags: ["api"],
+    description: "Get a user's favorite POIs",
+    notes: "Returns a list of POI objects that the user has marked as favorites",
+  },
+
+  addFavorite: {
+    auth: { strategy: "jwt" },
+    handler: async (request, h) => {
+      try {
+        const userId = request.auth.credentials.id;
+        const { poiId, poiName } = request.payload;
+        const result = await db.userStore.addFavorite(userId, poiId, poiName);
+        return h.response(result).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Failed to add favorite");
+      }
+    },
+    tags: ["api"],
+    description: "Add a favorite POI",
+    notes: "Adds a POI to the user's list of favorites",
+  },
+
+  removeFavorite: {
+    auth: { strategy: "jwt" },
+    handler: async (request, h) => {
+      try {
+        const userId = request.auth.credentials.id;
+        const { poiId } = request.payload;
+        const result = await db.userStore.removeFavorite(userId, poiId);
+        return h.response(result).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Failed to remove favorite");
+      }
+    },
+    tags: ["api"],
+    description: "Remove a favorite POI",
+    notes: "Removes a POI from the user's list of favorites",
+  },
 };

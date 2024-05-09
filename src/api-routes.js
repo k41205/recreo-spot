@@ -10,6 +10,9 @@ export const apiRoutes = [
   { method: "POST", path: "/api/users/{id}", config: userApi.update },
   { method: "DELETE", path: "/api/users/{id}", config: userApi.deleteOne },
   { method: "DELETE", path: "/api/users", config: userApi.delete },
+  { method: "GET", path: "/api/users/favorites", config: userApi.getFavorites },
+  { method: "POST", path: "/api/users/favorites", config: userApi.addFavorite },
+  { method: "POST", path: "/api/users/favorite/remove", config: userApi.removeFavorite },
 
   { method: "POST", path: "/api/pois", config: poiApi.create },
   { method: "GET", path: "/api/pois/{id}", config: poiApi.findOne },

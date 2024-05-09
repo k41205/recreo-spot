@@ -444,14 +444,14 @@ button {
   padding: 80px;
 }
 
-.dashboard {
+.app {
   display: flex;
   border: 2px solid black;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.dashboard__panel {
+.app__panel {
   background-color: #0c1713;
   height: 30rem;
   width: 20rem;
@@ -597,4 +597,36 @@ button {
 .profile__button:hover,
 .form__button:hover {
   box-shadow: var(--neon-button);
+}
+
+#favorites {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+}
+
+#favorite {
+  width: 35px;
+  height: 35px;
+  background-image: url(/icons/favorite.svg);
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#unfavorite {
+  width: 35px;
+  height: 35px;
+  background-image: url(/icons/unfavorite.svg);
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#favorite:hover {
+  background-image: url(/icons/unfavorite.svg);
+}
+
+#unfavorite:hover {
+  background-image: url(/icons/favorite.svg);
 }

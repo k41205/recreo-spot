@@ -66,10 +66,7 @@ export const accountsController = {
       if (user.type === "admin") {
         return h.redirect("/admin");
       }
-      if (user.type === "mod") {
-        return h.redirect("/mod");
-      }
-      if (user.type === "user") {
+      if (user.type === "mod" || user.type === "user") {
         return h.redirect("/user");
       }
     },
@@ -81,7 +78,6 @@ export const accountsController = {
       try {
         const decodedToken = await admin.auth().verifyIdToken(token);
         let user = await db.userStore.getUserByEmail(decodedToken.email);
-        let userCreated;
         if (!user) {
           const [name, surname] = decodedToken.name.split(" ");
           const newUser = {
@@ -105,10 +101,7 @@ export const accountsController = {
         if (user.type === "admin") {
           redirectUrl = "/admin";
         }
-        if (user.type === "mod") {
-          redirectUrl = "/mod";
-        }
-        if (user.type === "user") {
+        if (user.type === "mod" || user.type === "user") {
           redirectUrl = "/user";
         }
         return h.response({ redirectUrl: redirectUrl }).code(200);
