@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/k41205/recreo-spot/compare/v1.2.0...v1.3.0) (2024-05-10)
+
+
+### Features
+
+* implement share by email ([e347a78](https://github.com/k41205/recreo-spot/commit/e347a784e32b9a524b27fcedb1e80611e91505d5))
+
 # [1.2.0](https://github.com/k41205/recreo-spot/compare/v1.1.0...v1.2.0) (2024-05-09)
 
 
