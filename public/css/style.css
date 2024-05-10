@@ -630,3 +630,12 @@ button {
 #unfavorite:hover {
   background-image: url(/icons/favorite.svg);
 }
+
+#share {
+  width: 35px;
+  height: 35px;
+  background-image: url(/icons/share.svg);
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

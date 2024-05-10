@@ -50,8 +50,21 @@ function getPoiDetails(poi) {
   </div>
   ${userPoiIds.includes(poi.id) ? "<button id='updatePoiButton'>Modify POI</button>" : ""}
   ${poi.isPublic ? fav : ""}
+  <div id='share'></div>
   `;
+  tempLat = document.getElementById("poiLat").textContent;
+  tempLng = document.getElementById("poiLon").textContent;
   currName = document.getElementById("poiName").textContent;
+  currDescription = document.getElementById("poiDescription").textContent;
+}
+
+function sharePoi(poi) {
+  const subject = encodeURIComponent(`Sharing POI: ${poi.name}`);
+  const body = encodeURIComponent(
+    `Hello,\n\nPlease find the details of the POI below:\n\nName: ${poi.name}\nLatitude: ${poi.lat}\nLongitude: ${poi.lng}\nDescription: ${poi.description}\n\nBest Regards,`
+  );
+  const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+  window.open(mailtoLink, "_blank");
 }
 
 function addPoiToMap(poi, iconColor) {
@@ -147,6 +160,16 @@ document.getElementById("poiDetails").addEventListener("click", async (event) =>
     document.getElementById("favorite").id = "unfavorite";
     await updateFavorites();
     return;
+  }
+  if (event.target.id === "share") {
+    const poi = {
+      name: currName,
+      lat: tempLat,
+      lng: tempLng,
+      description: currDescription,
+    };
+    // console.log(poi);
+    sharePoi(poi);
   }
 });
 
