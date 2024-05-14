@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/k41205/recreo-spot/compare/v1.3.0...v1.4.0) (2024-05-14)
+
+
+### Features
+
+* implement noticeboard management for admin and only read for user ([772b5d3](https://github.com/k41205/recreo-spot/commit/772b5d3230170a2982f0d2d24c978d4600127a91))
+
 # [1.3.0](https://github.com/k41205/recreo-spot/compare/v1.2.0...v1.3.0) (2024-05-10)
 
 
