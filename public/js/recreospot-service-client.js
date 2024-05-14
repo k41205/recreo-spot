@@ -56,6 +56,21 @@ export const recreospotService = {
     return res.data;
   },
 
+  async createAnnouncement(announcement) {
+    const res = await axios.post(`${this.recreospotUrl}/api/announcements`, announcement);
+    return res.data;
+  },
+
+  async getAllAnnouncements() {
+    const res = await axios.get(`${this.recreospotUrl}/api/announcements/all`);
+    return res.data;
+  },
+
+  async deleteAllAnnouncements() {
+    const res = await axios.delete(`${this.recreospotUrl}/api/announcements/all`);
+    return res.data;
+  },
+
   clearAuth() {
     axios.defaults.headers.common.Authorization = "";
   },

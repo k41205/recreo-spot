@@ -13,6 +13,9 @@ export const apiRoutes = [
   { method: "GET", path: "/api/users/favorites", config: userApi.getFavorites },
   { method: "POST", path: "/api/users/favorites", config: userApi.addFavorite },
   { method: "POST", path: "/api/users/favorite/remove", config: userApi.removeFavorite },
+  { method: "POST", path: "/api/announcements", config: userApi.createAnnouncement },
+  { method: "GET", path: "/api/announcements/all", config: userApi.getAllAnnouncements },
+  { method: "DELETE", path: "/api/announcements/all", config: userApi.deleteAllAnnouncements },
 
   { method: "POST", path: "/api/pois", config: poiApi.create },
   { method: "GET", path: "/api/pois/{id}", config: poiApi.findOne },

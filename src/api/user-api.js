@@ -200,4 +200,48 @@ export const userApi = {
     description: "Remove a favorite POI",
     notes: "Removes a POI from the user's list of favorites",
   },
+  createAnnouncement: {
+    auth: { strategy: "jwt" },
+    handler: async (request, h) => {
+      try {
+        console.log(request.payload);
+        const { title, message } = request.payload;
+        const result = await db.userStore.createAnnouncement(title, message);
+        return h.response(result).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable("Failed to create announcement");
+      }
+    },
+    tags: ["api"],
+    description: "Create a new announcement",
+    notes: "Creates a new announcement for the noticeboard",
+  },
+
+  getAllAnnouncements: {
+    auth: { strategy: "jwt" },
+    handler: async (request, h) => {
+      try {
+        const announcements = await db.userStore.getAllAnnouncements();
+        return h.response(announcements).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Failed to fetch announcements");
+      }
+    },
+    description: "Get all announcements",
+    notes: "Returns all announcements from the database",
+  },
+
+  deleteAllAnnouncements: {
+    auth: { strategy: "jwt" },
+    handler: async (request, h) => {
+      try {
+        const result = await db.userStore.deleteAllAnnouncements();
+        return h.response(result).code(200);
+      } catch (err) {
+        return Boom.serverUnavailable("Failed to delete all announcements");
+      }
+    },
+    description: "Delete all announcements",
+    notes: "Deletes all announcements from the database",
+  },
 };
