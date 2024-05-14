@@ -2,9 +2,11 @@ export function userFirestoreStore(firestore, FieldValue) {
   return {
     // Set a default collection name
     collectionName: "users",
+    noticeboard: "noticeboard",
 
     setCollectionTest(boolean) {
       this.collectionName = boolean ? "users-test" : "users";
+      this.noticeboard = boolean ? "noticeboard-test" : "noticeboard";
     },
 
     async addUser(userData) {
@@ -116,6 +118,36 @@ export function userFirestoreStore(firestore, FieldValue) {
         console.error("Failed to remove favorite:", error);
         throw new Error("Failed to remove favorite");
       }
+    },
+
+    async createAnnouncement(title, message) {
+      try {
+        const announcementRef = await firestore.collection(this.noticeboard).add({
+          title,
+          message,
+          date: FieldValue.serverTimestamp(),
+        });
+        const announcementSnap = await announcementRef.get();
+        return { id: announcementSnap.id, ...announcementSnap.data() };
+      } catch (error) {
+        console.error("Failed to create announcement:", error);
+        throw new Error("Failed to create announcement");
+      }
+    },
+
+    async getAllAnnouncements() {
+      const snapshot = await firestore.collection(this.noticeboard).get();
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    },
+
+    async deleteAllAnnouncements() {
+      const snapshot = await firestore.collection(this.noticeboard).get();
+      const batch = firestore.batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      return { success: true, message: "All announcements deleted successfully" };
     },
   };
 }

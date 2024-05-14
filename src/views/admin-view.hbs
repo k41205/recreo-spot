@@ -3,6 +3,16 @@
 {{> menu}}
 
 <section class="admin">
+  <div class="announcement__container">
+    <h3 class="announcement__title">Announcements</h3>
+    <form id="announcement__form">
+      <input type="text" id="title" placeholder="Title" required />
+      <textarea id="message" placeholder="Your message here" required></textarea>
+      <button type="submit">Post Announcement</button>
+    </form>
+    <div id="announcements-list"></div>
+    <button id="delete-all-announcements">Delete All Announcements</button>
+  </div>
   <h3 class="admin__title">Analytics</h3>
   <div class="analytics__container">
     <article class="analytics__users">
