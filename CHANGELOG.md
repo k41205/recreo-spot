@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/k41205/recreo-spot/compare/v1.4.0...v1.5.0) (2024-05-16)
+
+
+### Features
+
+* implement hashing and salting user password ([e5d8659](https://github.com/k41205/recreo-spot/commit/e5d86594c57a0e8c6fb5139c368a309bd0d84619))
+
 # [1.4.0](https://github.com/k41205/recreo-spot/compare/v1.3.0...v1.4.0) (2024-05-14)
 
 
