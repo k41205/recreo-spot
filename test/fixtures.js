@@ -1,5 +1,7 @@
 export const serviceUrl = "http://DESKTOP-9FOLU4E:3000";
 
+// Mock data used for tests
+
 export const maggie = { firstName: "Maggie", lastName: "Simpson", password: "123456", username: "magSim", email: "maggie@simpson.com" };
 
 export const usersMock = [
@@ -18,12 +20,59 @@ export const poisMock = [
   { name: "POI 5", lat: "53.2781", lon: "-6.2969", description: "This is POI 5" },
 ];
 
+// Dev data used to seed db for development environment
+
 export const usersDev = [
-  { firstName: "Admin", lastName: "Istrator", password: "root12", type: "admin", username: "admin", email: "admin@example.com", favorites: [] },
-  { firstName: "Mod", lastName: "Erator", password: "root12", type: "mod", username: "mod", email: "mod@example.com", favorites: [] },
-  { firstName: "Name1", lastName: "Surname1", password: "123456", type: "user", username: "user1", email: "user1@example.com", favorites: [] },
-  { firstName: "Name2", lastName: "Surname2", password: "123456", type: "user", username: "user2", email: "user2@example.com", favorites: [] },
-  { firstName: "Name3", lastName: "Surname3", password: "123456", type: "user", username: "user3", email: "user3@example.com", favorites: [] },
+  {
+    firstName: "Admin",
+    lastName: "Istrator",
+    // root12
+    password: "$2b$10$e1g4w9wc/KFE33ApTQjCN.6.2nbLrTCZG8J5DNa643TB6ggTNVEGm",
+    type: "admin",
+    username: "admin",
+    email: "admin@example.com",
+    favorites: [],
+  },
+  {
+    firstName: "Mod",
+    lastName: "Erator",
+    // root12
+    password: "$2b$10$RyoHtRzsY9l82JS.fsoIyeV1gSP4JjT4WT9bBUpeB4udWsGb3etY2",
+    type: "mod",
+    username: "mod",
+    email: "mod@example.com",
+    favorites: [],
+  },
+  {
+    firstName: "Name1",
+    lastName: "Surname1",
+    // 123456
+    password: "$2b$10$//yboCdwSyot3acb5iNN/./QH893Q/dS9SJz.4mf9CywC1DMceUuO",
+    type: "user",
+    username: "user1",
+    email: "user1@example.com",
+    favorites: [],
+  },
+  {
+    firstName: "Name2",
+    lastName: "Surname2",
+    // 123456
+    password: "$2b$10$DaHTPAhy8FmqkyXQ9Z2dwuCIV/yptQAcHT49ltz26glBanOi4dQdG",
+    type: "user",
+    username: "user2",
+    email: "user2@example.com",
+    favorites: [],
+  },
+  {
+    firstName: "Name3",
+    lastName: "Surname3",
+    // 123456
+    password: "$2b$10$KT/umX2zQm8eS94T22gPMu5odtsWxQNcNXqAhH4vtQkXSdLFLB9Gi",
+    type: "user",
+    username: "user3",
+    email: "user3@example.com",
+    favorites: [],
+  },
 ];
 
 export const poisDev = [

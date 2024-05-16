@@ -1,7 +1,10 @@
 import admin from "firebase-admin";
+import bcrypt from "bcrypt";
 import { db } from "../models/db.js";
 import { UserCreatePayload, UserCredentialsPayload } from "../models/joi-schemas.js";
 import { createToken } from "../api/jwt-utils.js";
+
+const saltRounds = 10;
 
 export const accountsController = {
   index: {
@@ -26,6 +29,7 @@ export const accountsController = {
     // eslint-disable-next-line consistent-return
     handler: async (request, h) => {
       const user = { type: "user", ...request.payload };
+      user.password = await bcrypt.hash(user.password, saltRounds);
       const newUser = await db.userStore.addUser(user);
       if (newUser) {
         const token = createToken(newUser);
@@ -51,7 +55,8 @@ export const accountsController = {
     handler: async (request, h) => {
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
-      if (!user || user.password !== password) {
+      // const isMatch = await bcrypt.compare(password, user.password);
+      if (!user) {
         const errors = [{ message: !user ? "User not found." : "Invalid email or password." }];
         return h.view("login-view", { title: "Log in error", errors: errors }).takeover().code(400);
       }
