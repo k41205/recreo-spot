@@ -4,7 +4,7 @@ const username = Joi.string().max(10).example("HomSims");
 const firstName = Joi.string().example("Homer");
 const lastName = Joi.string().example("Simpson");
 const email = Joi.string().email().example("homer@simpson.com");
-const password = Joi.string().min(6).max(16).example("secret");
+const password = Joi.string().min(6).example("secret");
 const type = Joi.string().valid("user", "mod", "admin");
 
 export const UserIdSpec = Joi.string().required().example("EriU0nvx7ha1W4yGtflZ").label("User Id");
