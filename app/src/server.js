@@ -16,10 +16,13 @@ import { apiRoutes } from "./api-routes.js";
 import { db } from "./models/db.js";
 import { eq } from "./utils/handlebars-helpers.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 if (process.env.NODE_ENV === "production") {
-  dotenv.config();
+  dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 } else {
-  dotenv.config({ path: ".env.development" });
+  dotenv.config({ path: path.resolve(__dirname, "../../.env.development") });
 }
 console.log(`ENV: ${process.env.NODE_ENV}`);
 
@@ -29,9 +32,6 @@ const swaggerOptions = {
     version: "1.0",
   },
 };
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 async function init() {
   const server = Hapi.server({

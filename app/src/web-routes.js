@@ -1,7 +1,12 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { adminController } from "./controllers/admin-controller.js";
 import { userController } from "./controllers/user-controller.js";
 import { profileController } from "./controllers/profile-controller.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const webRoutes = [
   { method: "GET", path: "/", config: accountsController.index },
@@ -13,5 +18,10 @@ export const webRoutes = [
   { method: "GET", path: "/admin", config: adminController.index },
   { method: "GET", path: "/user", config: userController.index },
   { method: "GET", path: "/profile", config: profileController.index },
-  { method: "GET", path: "/{param*}", handler: { directory: { path: "./public" } }, options: { auth: false } },
+  {
+    method: "GET",
+    path: "/{param*}",
+    handler: { directory: { path: path.resolve(__dirname, process.env.NODE_ENV === "production" ? "../../dist/public" : "../../build/public") } },
+    options: { auth: false },
+  },
 ];
