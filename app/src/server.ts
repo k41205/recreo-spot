@@ -60,9 +60,9 @@ async function init() {
       hbs: Handlebars,
     },
     relativeTo: __dirname,
-    path: "./views",
-    layoutPath: "./views/layouts",
-    partialsPath: "./views/partials",
+    path: path.join(__dirname, "views"),
+    layoutPath: path.join(__dirname, "views/layouts"),
+    partialsPath: path.join(__dirname, "views/partials"),
     layout: true,
     isCached: false,
   });
