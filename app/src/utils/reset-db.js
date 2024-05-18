@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { db } from "../models/db.js";
-import { usersDev, poisDev } from "../../test/fixtures.js";
+import { usersDev, poisDev } from "../../test/fixtures.js/index.js";
 
 dotenv.config();
 

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import Inert from "@hapi/inert";
 import Vision from "@hapi/vision";
-import Hapi from "@hapi/hapi";
+import Hapi, { ResponseToolkit, Request } from "@hapi/hapi";
 import path from "path";
 import Joi from "joi";
 import Cookie from "@hapi/cookie";
@@ -16,10 +16,13 @@ import { apiRoutes } from "./api-routes.js";
 import { db } from "./models/db.js";
 import { eq } from "./utils/handlebars-helpers.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 if (process.env.NODE_ENV === "production") {
-  dotenv.config();
+  dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 } else {
-  dotenv.config({ path: ".env.development" });
+  dotenv.config({ path: path.resolve(__dirname, "../../.env.development") });
 }
 console.log(`ENV: ${process.env.NODE_ENV}`);
 
@@ -29,9 +32,6 @@ const swaggerOptions = {
     version: "1.0",
   },
 };
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 async function init() {
   const server = Hapi.server({
@@ -67,10 +67,13 @@ async function init() {
     isCached: false,
   });
 
-  server.ext("onPreResponse", (request, h) => {
+  server.ext("onPreResponse", (request: Request, h: ResponseToolkit) => {
     const { response } = request;
+    // @ts-ignore
     if (response.variety === "view") {
+      // @ts-ignore
       response.source.context = response.source.context || {};
+      // @ts-ignore
       response.source.context.baseUrl = process.env.API_BASE_URL;
     }
     return h.continue;
@@ -92,8 +95,12 @@ async function init() {
   });
   server.auth.default("jwt");
 
+  if (!process.env.FIRESTORE_INSTANCE) {
+    throw new Error("FIRESTORE_INSTANCE environment variable is not set");
+  }
   console.log(`DB: ${process.env.FIRESTORE_INSTANCE}`);
   db.init(process.env.FIRESTORE_INSTANCE);
+  // @ts-ignore
   server.route(webRoutes);
   server.route(apiRoutes);
   await server.start();

@@ -1,17 +1,19 @@
 import Boom from "@hapi/boom";
+import { ResponseToolkit, Request } from "@hapi/hapi";
 import { db } from "../models/db.js";
 import { PoiCreatePayload, UserIdSpec, PoiIdSpec, PoiSchema, PoiArray } from "../models/joi-schemas.js";
 import { validationError } from "./logger.js";
+import { Poi } from "poi-firestore-store.js";
 
 export const poiApi = {
   create: {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const userId = request.auth.credentials.id;
-        const poi = await db.poiStore.addPoi(userId, request.payload);
+        const poi = await db.poiStore!.addPoi(userId as string, request.payload as Poi);
         if (poi) {
           return h.response(poi).code(201);
         }
@@ -31,9 +33,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const poi = await db.poiStore.getPoiById(request.params.id);
+        const poi = await db.poiStore!.getPoiById(request.params.id);
         if (!poi) {
           return Boom.notFound("No POI with this id");
         }
@@ -53,9 +55,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const pois = await db.poiStore.getPoisByUser(request.params.userId);
+        const pois = await db.poiStore!.getPoisByUser(request.params.userId);
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for user's POIs");
@@ -72,9 +74,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const pois = await db.poiStore.getPublicPois();
+        const pois = await db.poiStore!.getPublicPois();
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for public POIs");
@@ -90,9 +92,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const pois = await db.poiStore.getCandidatePois();
+        const pois = await db.poiStore!.getCandidatePois();
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for candidate POIs");
@@ -108,9 +110,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const pois = await db.poiStore.getAllPois();
+        const pois = await db.poiStore!.getAllPois();
         return pois;
       } catch (err) {
         return Boom.serverUnavailable("Error looking for all POIs");
@@ -126,11 +128,11 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const poiId = request.params.id;
         const updateData = request.payload;
-        const updatedPoi = await db.poiStore.updatePoi(poiId, updateData);
+        const updatedPoi = await db.poiStore!.updatePoi(poiId, updateData as Partial<Poi>);
         if (updatedPoi) {
           return h.response(updatedPoi).code(200);
         }
@@ -150,9 +152,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const poiDeleted = await db.poiStore.deletePoiById(request.params.id);
+        const poiDeleted = await db.poiStore!.deletePoiById(request.params.id);
         if (!poiDeleted) {
           return Boom.notFound("POI not found or unable to delete");
         }
@@ -171,9 +173,9 @@ export const poiApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        await db.poiStore.deleteAllPois();
+        await db.poiStore!.deleteAllPois();
         return h.response({ success: true, message: "POIs deleted successfully" }).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Error trying to delete all POIs");

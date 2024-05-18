@@ -1,14 +1,15 @@
+import { DB } from "db";
+import { userFirestoreStore } from "./firestore/user-firestore-store.js";
+import { poiFirestoreStore } from "./firestore/poi-firestore-store.js";
 import { userMemStore } from "./mem/user-mem-store.js";
 import { poiMemStore } from "./mem/poi-mem-store.js";
 import { connectFirestore } from "./firestore/connect.js";
-import { userFirestoreStore } from "./firestore/user-firestore-store.js";
-import { poiFirestoreStore } from "./firestore/poi-firestore-store.js";
 
-export const db = {
+export const db: DB = {
   userStore: null,
   poiStore: null,
 
-  init(storeType) {
+  init(storeType: string) {
     const { firestore, fieldValue } = connectFirestore();
     switch (storeType) {
       case "firestore":
@@ -22,7 +23,9 @@ export const db = {
         this.poiStore.setCollectionTest(true);
         break;
       default:
+        //@ts-ignore
         this.userStore = userMemStore;
+        //@ts-ignore
         this.poiStore = poiMemStore;
     }
   },

@@ -1,20 +1,23 @@
 import Boom from "@hapi/boom";
+import { ResponseToolkit, Request } from "@hapi/hapi";
+//@ts-ignore
 import bcrypt from "bcrypt";
 import { db } from "../models/db.js";
 import { validationError } from "./logger.js";
 import { createToken } from "./jwt-utils.js";
 import { UserIdSpec, UserCreatePayload, UserSchema, UserUpdatePayload, UserCredentialsPayload, UserArray } from "../models/joi-schemas.js";
+import { Announcement, User, UserRole } from "user-firestore-store.js";
 
 const saltRounds = 10;
 
 export const userApi = {
   create: {
     auth: false,
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const user = { ...request.payload, type: "user" };
+        const user = { ...(request.payload as User), type: "user" as UserRole };
         user.password = await bcrypt.hash(user.password, saltRounds);
-        const newUser = await db.userStore.addUser(user);
+        const newUser = await db.userStore!.addUser(user);
         if (newUser) {
           return h.response(newUser).code(201);
         }
@@ -34,9 +37,9 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const user = await db.userStore.getUserById(request.params.id);
+        const user = await db.userStore!.getUserById(request.params.id);
         if (!user) {
           return Boom.notFound("No User with this id");
         }
@@ -56,9 +59,9 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const users = await db.userStore.getAllUsers();
+        const users = await db.userStore!.getAllUsers();
         return users;
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
@@ -74,15 +77,14 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const userId = request.params.id;
-        const updateData = request.payload;
-        console.log(updateData);
+        const updateData = request.payload as Partial<User>;
         if (updateData.password) {
           updateData.password = await bcrypt.hash(updateData.password, saltRounds);
         }
-        const updatedUser = await db.userStore.updateUser(userId, updateData);
+        const updatedUser = await db.userStore!.updateUser(userId, updateData);
         if (updatedUser) {
           return h.response(updatedUser).code(200);
         }
@@ -102,9 +104,9 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const userDeleted = await db.userStore.deleteUserById(request.params.id);
+        const userDeleted = await db.userStore!.deleteUserById(request.params.id);
         if (!userDeleted) {
           return Boom.notFound("User not found or unable to delete");
         }
@@ -123,9 +125,9 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        await db.userStore.deleteAllUsers();
+        await db.userStore!.deleteAllUsers();
         return h.response({ success: true, message: "Users deleted successfully" }).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
@@ -138,10 +140,10 @@ export const userApi = {
 
   authenticate: {
     auth: false,
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const { email, password } = request.payload;
-        const user = await db.userStore.getUserByEmail(email);
+        const { email, password } = request.payload as User;
+        const user = await db.userStore!.getUserByEmail(email);
         if (!user) {
           return Boom.unauthorized("User not found");
         }
@@ -162,12 +164,12 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const userId = request.auth.credentials.id;
-        const favorites = await db.userStore.getUserFavorites(userId);
+        const favorites = await db.userStore!.getUserFavorites(userId as string);
         return h.response(favorites).code(200);
-      } catch (err) {
+      } catch (err: any) {
         return Boom.serverUnavailable(`Database Error: ${err.message}`);
       }
     },
@@ -178,11 +180,11 @@ export const userApi = {
 
   addFavorite: {
     auth: { strategy: "jwt" },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const userId = request.auth.credentials.id;
-        const { poiId, poiName } = request.payload;
-        const result = await db.userStore.addFavorite(userId, poiId, poiName);
+        const { poiId, poiName } = request.payload as any;
+        const result = await db.userStore!.addFavorite(userId as string, poiId, poiName);
         return h.response(result).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Failed to add favorite");
@@ -195,11 +197,11 @@ export const userApi = {
 
   removeFavorite: {
     auth: { strategy: "jwt" },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
         const userId = request.auth.credentials.id;
-        const { poiId } = request.payload;
-        const result = await db.userStore.removeFavorite(userId, poiId);
+        const { poiId } = request.payload as any;
+        const result = await db.userStore!.removeFavorite(userId as string, poiId);
         return h.response(result).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Failed to remove favorite");
@@ -211,10 +213,10 @@ export const userApi = {
   },
   createAnnouncement: {
     auth: { strategy: "jwt" },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const { title, message } = request.payload;
-        const result = await db.userStore.createAnnouncement(title, message);
+        const { title, message } = request.payload as Announcement;
+        const result = await db.userStore!.createAnnouncement(title, message);
         return h.response(result).code(201);
       } catch (err) {
         return Boom.serverUnavailable("Failed to create announcement");
@@ -227,9 +229,9 @@ export const userApi = {
 
   getAllAnnouncements: {
     auth: { strategy: "jwt" },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const announcements = await db.userStore.getAllAnnouncements();
+        const announcements = await db.userStore!.getAllAnnouncements();
         return h.response(announcements).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Failed to fetch announcements");
@@ -241,9 +243,9 @@ export const userApi = {
 
   deleteAllAnnouncements: {
     auth: { strategy: "jwt" },
-    handler: async (request, h) => {
+    handler: async (request: Request, h: ResponseToolkit) => {
       try {
-        const result = await db.userStore.deleteAllAnnouncements();
+        const result = await db.userStore!.deleteAllAnnouncements();
         return h.response(result).code(200);
       } catch (err) {
         return Boom.serverUnavailable("Failed to delete all announcements");

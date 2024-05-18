@@ -1,13 +1,16 @@
-export function poiFirestoreStore(firestore) {
+import admin from "firebase-admin";
+import { Poi, PoiFirestoreStore } from "poi-firestore-store";
+
+export function poiFirestoreStore(firestore: admin.firestore.Firestore): PoiFirestoreStore {
   return {
     // Set a default collection name
     collectionName: "pois",
 
-    setCollectionTest(boolean) {
+    setCollectionTest(boolean: boolean): void {
       this.collectionName = boolean ? "pois-test" : "pois";
     },
 
-    async addPoi(userId, poiData) {
+    async addPoi(userId: string, poiData: Partial<Poi>): Promise<Poi> {
       const poiDataWithAuthor = { author: userId, isPublic: false, isCandidate: false, ...poiData };
       const poiRef = await firestore.collection(this.collectionName).add(poiDataWithAuthor);
       const poiSnap = await poiRef.get();
@@ -17,12 +20,12 @@ export function poiFirestoreStore(firestore) {
       return { id: poiSnap.id, ...poiSnap.data() };
     },
 
-    async getPoiById(id) {
+    async getPoiById(id: string): Promise<Poi | null> {
       const poiSnap = await firestore.collection(this.collectionName).doc(id).get();
       return poiSnap.exists ? { id: poiSnap.id, ...poiSnap.data() } : null;
     },
 
-    async getPoisByUser(id) {
+    async getPoisByUser(id: string): Promise<Poi[]> {
       const poisQuerySnapshot = await firestore.collection(this.collectionName).where("author", "==", id).get();
       if (poisQuerySnapshot.empty) {
         return [];
@@ -30,7 +33,7 @@ export function poiFirestoreStore(firestore) {
       return poisQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
-    async getPublicPois() {
+    async getPublicPois(): Promise<Poi[]> {
       const poisQuerySnapshot = await firestore.collection(this.collectionName).where("isPublic", "==", true).get();
       if (poisQuerySnapshot.empty) {
         return [];
@@ -38,7 +41,7 @@ export function poiFirestoreStore(firestore) {
       return poisQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
-    async getCandidatePois() {
+    async getCandidatePois(): Promise<Poi[]> {
       const poisQuerySnapshot = await firestore.collection(this.collectionName).where("isCandidate", "==", true).get();
       if (poisQuerySnapshot.empty) {
         return [];
@@ -46,12 +49,12 @@ export function poiFirestoreStore(firestore) {
       return poisQuerySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
-    async getAllPois() {
+    async getAllPois(): Promise<Poi[]> {
       const snapshot = await firestore.collection(this.collectionName).get();
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
-    async updatePoi(id, updateData) {
+    async updatePoi(id: string, updateData: Partial<Poi>): Promise<Poi> {
       const poiRef = firestore.collection(this.collectionName).doc(id);
       console.log(updateData);
       await poiRef.update(updateData);
@@ -62,13 +65,13 @@ export function poiFirestoreStore(firestore) {
       return { id: updatedPoiSnap.id, ...updatedPoiSnap.data() };
     },
 
-    async deletePoiById(id) {
+    async deletePoiById(id: string): Promise<boolean> {
       await firestore.collection(this.collectionName).doc(id).delete();
       const poi = await this.getPoiById(id);
       return poi === null; // returns true if deletion was successful
     },
 
-    async deleteAllPois() {
+    async deleteAllPois(): Promise<boolean> {
       const snapshot = await firestore.collection(this.collectionName).get();
       const batch = firestore.batch();
 

@@ -1,4 +1,7 @@
+import { ResponseToolkit, Request } from "@hapi/hapi";
+import { User, UserRole } from "user-firestore-store";
 import admin from "firebase-admin";
+// @ts-ignore
 import bcrypt from "bcrypt";
 import { db } from "../models/db.js";
 import { UserCreatePayload, UserCredentialsPayload } from "../models/joi-schemas.js";
@@ -9,13 +12,13 @@ const saltRounds = 10;
 export const accountsController = {
   index: {
     auth: false,
-    async handler(request, h) {
+    async handler(request: Request, h: ResponseToolkit) {
       return h.view("main", { title: "Welcome to RecreoSpot" });
     },
   },
   showLogin: {
     auth: false,
-    async handler(request, h) {
+    async handler(request: Request, h: ResponseToolkit) {
       return h.view("login-view", { title: "Login to RecreoSpot" });
     },
   },
@@ -24,13 +27,13 @@ export const accountsController = {
     validate: {
       payload: UserCreatePayload,
       options: { abortEarly: false },
-      failAction: (request, h, error) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
+      failAction: (request: Request, h: ResponseToolkit, error: any) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
     },
     // eslint-disable-next-line consistent-return
-    handler: async (request, h) => {
-      const user = { type: "user", ...request.payload };
+    handler: async (request: Request, h: ResponseToolkit) => {
+      const user = { ...(request.payload as User) };
       user.password = await bcrypt.hash(user.password, saltRounds);
-      const newUser = await db.userStore.addUser(user);
+      const newUser = await db.userStore!.addUser(user);
       if (newUser) {
         const token = createToken(newUser);
         h.state("token", token, {
@@ -49,12 +52,12 @@ export const accountsController = {
     validate: {
       payload: UserCredentialsPayload,
       options: { abortEarly: false },
-      failAction: (request, h, error) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
+      failAction: (request: Request, h: ResponseToolkit, error: any) => h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400),
     },
     // eslint-disable-next-line consistent-return
-    handler: async (request, h) => {
-      const { email, password } = request.payload;
-      const user = await db.userStore.getUserByEmail(email);
+    handler: async (request: Request, h: ResponseToolkit) => {
+      const { email, password } = request.payload as User;
+      const user = await db.userStore!.getUserByEmail(email);
       // const isMatch = await bcrypt.compare(password, user.password);
       if (!user) {
         const errors = [{ message: !user ? "User not found." : "Invalid email or password." }];
@@ -78,22 +81,22 @@ export const accountsController = {
   },
   googleLogin: {
     auth: false,
-    handler: async (request, h) => {
-      const { token } = request.payload;
+    handler: async (request: Request, h: ResponseToolkit) => {
+      const { token } = request.payload as any;
       try {
         const decodedToken = await admin.auth().verifyIdToken(token);
-        let user = await db.userStore.getUserByEmail(decodedToken.email);
+        let user = await db.userStore!.getUserByEmail(decodedToken.email as string);
         if (!user) {
-          const [name, surname] = decodedToken.name.split(" ");
+          const [name, surname] = decodedToken.name.split(" ") as string;
           const newUser = {
-            email: decodedToken.email,
+            email: decodedToken.email as string,
             firstName: name,
             lastName: surname,
             password: null,
-            type: "user",
+            type: "user" as UserRole,
             username: ["user", decodedToken.uid.slice(0, 4)].join("-"),
           };
-          user = await db.userStore.addUser(newUser);
+          user = await db.userStore!.addUser(newUser);
         }
         const sessionToken = createToken(user);
         h.state("token", sessionToken, {
@@ -121,7 +124,7 @@ export const accountsController = {
   },
   logout: {
     auth: false,
-    handler: async (request, h) =>
+    handler: async (request: Request, h: ResponseToolkit) =>
       h
         .response("Logged out")
         .unstate("token", {
@@ -131,8 +134,8 @@ export const accountsController = {
         })
         .redirect("/"),
   },
-  async validate(request, session) {
-    const user = await db.userStore.getUserById(session.id);
+  async validate(request: Request, session: any) {
+    const user = await db.userStore!.getUserById(session.id as string);
     if (!user) {
       return { isValid: false };
     }
