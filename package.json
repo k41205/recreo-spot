@@ -13,7 +13,7 @@
     "dev": "cross-env NODE_ENV=development concurrently \"tsc -p tsconfig.build.json --watch\" \"nodemon build/src/server.js\"",
     "clean": "rimraf dist",
     "clean-dev": "rimraf build",
-    "build": "npm run clean && tsc -p tsconfig.dist.json && npm run copy-assets",
+    "build": "npm run clean && tsc -p tsconfig.json && npm run copy-assets",
     "build-dev": "npm run clean-dev && tsc -p tsconfig.build.json && npm run copy-assets-dev",
     "copy-assets": "copyfiles -u 2 app/public/**/* dist/public && copyfiles -u 3 app/src/views/**/* dist/src/views",
     "copy-assets-dev": "copyfiles -u 2 app/public/**/* build/public && copyfiles -u 3 app/src/views/**/* build/src/views",
