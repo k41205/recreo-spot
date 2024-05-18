@@ -33,8 +33,8 @@ export const UserUpdatePayload = Joi.object()
   .label("UserUpdate");
 
 export const UserSchema = UserCreatePayload.keys({
-  type: type.required(),
-  id: UserIdSpec.required(),
+  // type: type.required(),
+  // id: UserIdSpec.required(),
   favorites: Joi.array().items(Joi.string()).label("Favorite POIs"),
 }).label("UserObject");
 

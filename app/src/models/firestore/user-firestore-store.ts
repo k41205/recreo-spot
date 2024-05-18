@@ -1,70 +1,73 @@
-export function userFirestoreStore(firestore, FieldValue) {
+import admin from "firebase-admin";
+import { UserFirestoreStore, User, Favorite, Announcement } from "user-firestore-store";
+
+export function userFirestoreStore(firestore: admin.firestore.Firestore, FieldValue: typeof admin.firestore.FieldValue): UserFirestoreStore {
   return {
     // Set a default collection name
     collectionName: "users",
     noticeboard: "noticeboard",
 
-    setCollectionTest(boolean) {
+    setCollectionTest(boolean: boolean): void {
       this.collectionName = boolean ? "users-test" : "users";
       this.noticeboard = boolean ? "noticeboard-test" : "noticeboard";
     },
 
-    async addUser(userData) {
+    async addUser(userData: User): Promise<User> {
       const userRef = await firestore.collection(this.collectionName).add(userData);
       const userSnap = await userRef.get();
       if (!userSnap.exists) {
         throw new Error("Failed to create a new user.");
       }
-      return { id: userSnap.id, ...userSnap.data() };
+      return { id: userSnap.id, type: "user", ...userSnap.data() } as User;
     },
 
-    async getUserById(id) {
+    async getUserById(id: string): Promise<User | null> {
       const userSnap = await firestore.collection(this.collectionName).doc(id).get();
-      return userSnap.exists ? { id: userSnap.id, ...userSnap.data() } : null;
+      return userSnap.exists ? ({ id: userSnap.id, ...userSnap.data() } as User) : null;
     },
 
-    async getUserByUsername(username) {
+    async getUserByUsername(username: string): Promise<User | null> {
       const userQuerySnapshot = await firestore.collection(this.collectionName).where("username", "==", username).get();
       if (userQuerySnapshot.empty) {
         return null;
       }
       // Assuming email is unique, take the first result
       const userDoc = userQuerySnapshot.docs[0];
-      return { id: userDoc.id, ...userDoc.data() };
+      return { id: userDoc.id, ...userDoc.data() } as User;
     },
 
-    async getUserByEmail(email) {
+    async getUserByEmail(email: string): Promise<User | null> {
       const userQuerySnapshot = await firestore.collection(this.collectionName).where("email", "==", email).get();
       if (userQuerySnapshot.empty) {
         return null;
       }
       // Assuming email is unique, take the first result
       const userDoc = userQuerySnapshot.docs[0];
-      return { id: userDoc.id, ...userDoc.data() };
+      return { id: userDoc.id, ...userDoc.data() } as User;
     },
 
-    async getAllUsers() {
+    async getAllUsers(): Promise<User[]> {
       const snapshot = await firestore.collection(this.collectionName).get();
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as User);
     },
 
-    async updateUser(id, updateData) {
+    async updateUser(id: string, updateData: Partial<User>): Promise<User> {
       const userRef = firestore.collection(this.collectionName).doc(id);
       await userRef.update(updateData);
       const updatedUserSnap = await userRef.get();
       if (!updatedUserSnap.exists) {
         throw new Error("User not found.");
       }
-      return { id: updatedUserSnap.id, ...updatedUserSnap.data() };
+      return { ...(updatedUserSnap.data() as User) };
     },
 
-    async deleteUserById(id) {
+    async deleteUserById(id: string): Promise<boolean> {
       await firestore.collection(this.collectionName).doc(id).delete();
       const user = await this.getUserById(id);
       return user === null; // returns true if deletion was successful
     },
 
-    async deleteAllUsers() {
+    async deleteAllUsers(): Promise<boolean> {
       const snapshot = await firestore.collection(this.collectionName).get();
       const batch = firestore.batch();
 
@@ -75,17 +78,20 @@ export function userFirestoreStore(firestore, FieldValue) {
       return true;
     },
 
-    async getUserFavorites(userId) {
+    async getUserFavorites(userId: string): Promise<Favorite[]> {
       const userRef = await firestore.collection(this.collectionName).doc(userId);
       const userSnap = await userRef.get();
       if (!userSnap.exists) {
         throw new Error("User not found.");
       }
       const userData = userSnap.data();
+      if (!userData) {
+        throw new Error("UserData not found.");
+      }
       return userData.favorites || [];
     },
 
-    async addFavorite(userId, poiId, poiName) {
+    async addFavorite(userId: string, poiId: string, poiName: string): Promise<{ success: boolean; message: string }> {
       const userRef = await firestore.collection(this.collectionName).doc(userId);
       try {
         await userRef.update({
@@ -101,14 +107,17 @@ export function userFirestoreStore(firestore, FieldValue) {
       }
     },
 
-    async removeFavorite(userId, poiId) {
+    async removeFavorite(userId: string, poiId: string): Promise<{ success: boolean; message: string }> {
       const userRef = await firestore.collection(this.collectionName).doc(userId);
       const userSnap = await userRef.get();
       if (!userSnap.exists) {
         throw new Error("User not found.");
       }
       const userData = userSnap.data();
-      const updatedFavorites = userData.favorites.filter((fav) => fav.id !== poiId);
+      if (!userData) {
+        throw new Error("UserData not found.");
+      }
+      const updatedFavorites = userData.favorites.filter((fav: Favorite) => fav.id !== poiId);
       try {
         await userRef.update({
           favorites: updatedFavorites,
@@ -120,7 +129,7 @@ export function userFirestoreStore(firestore, FieldValue) {
       }
     },
 
-    async createAnnouncement(title, message) {
+    async createAnnouncement(title: string, message: string): Promise<Announcement> {
       try {
         const announcementRef = await firestore.collection(this.noticeboard).add({
           title,
@@ -128,19 +137,19 @@ export function userFirestoreStore(firestore, FieldValue) {
           date: FieldValue.serverTimestamp(),
         });
         const announcementSnap = await announcementRef.get();
-        return { id: announcementSnap.id, ...announcementSnap.data() };
+        return { id: announcementSnap.id, ...announcementSnap.data() } as Announcement;
       } catch (error) {
         console.error("Failed to create announcement:", error);
         throw new Error("Failed to create announcement");
       }
     },
 
-    async getAllAnnouncements() {
+    async getAllAnnouncements(): Promise<Announcement[]> {
       const snapshot = await firestore.collection(this.noticeboard).get();
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Announcement);
     },
 
-    async deleteAllAnnouncements() {
+    async deleteAllAnnouncements(): Promise<{ success: boolean; message: string }> {
       const snapshot = await firestore.collection(this.noticeboard).get();
       const batch = firestore.batch();
       snapshot.docs.forEach((doc) => {
