@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/k41205/recreo-spot/compare/v1.5.0...v1.5.1) (2024-05-18)
+
+
+### Bug Fixes
+
+* change path on server.js for views ([61b1377](https://github.com/k41205/recreo-spot/commit/61b1377d44745dea77aa0a0809905da8ecb2eee1))
+
 # [1.5.0](https://github.com/k41205/recreo-spot/compare/v1.4.0...v1.5.0) (2024-05-16)
 
 
